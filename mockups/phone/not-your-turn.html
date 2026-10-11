@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Not your turn (phone)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,700;0,800;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="skip" viewBox="0 0 100 100">
+    <g fill="none" stroke-linecap="round">
+      <circle cx="50" cy="50" r="31" stroke="#000" stroke-width="23"/>
+      <line x1="29" y1="71" x2="71" y2="29" stroke="#000" stroke-width="23"/>
+      <circle cx="50" cy="50" r="31" stroke="currentColor" stroke-width="13"/>
+      <line x1="29" y1="71" x2="71" y2="29" stroke="currentColor" stroke-width="13"/>
+    </g>
+  </symbol>
+  <symbol id="reverse" viewBox="0 0 100 100">
+    <g transform="rotate(-45 50 50)" fill="currentColor" stroke="#000" stroke-width="6" stroke-linejoin="round" paint-order="stroke">
+      <polygon points="14,27 56,27 56,15 84,34 56,53 56,41 14,41"/>
+      <polygon points="86,59 44,59 44,47 16,66 44,85 44,73 86,73"/>
+    </g>
+  </symbol>
+  <symbol id="clockwise" viewBox="0 0 100 100">
+    <path d="M50 20 A32 32 0 1 1 22.3 36" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+    <polygon points="27.3,27.4 29.8,45 10.8,34" fill="currentColor"/>
+  </symbol>
+</svg>
+<main class="phone">
+<header class="bar"><span>Playing as <strong>Erin</strong></span><span class="brand">UNO</span></header><div class="stage"><a class="turn" href="penalty.html">Dave's turn</a></div><a class="toast" href="turn-dave.html" role="alert"><span>Not your turn</span><span>OK</span></a><section aria-label="Your hand"><div class="hand"><a class="card red" href="not-your-turn.html" aria-label="Red 2"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><span>2</span></span><span class="idx">2</span><span class="idx br">2</span></span></a><a class="card red" href="not-your-turn.html" aria-label="Red skip"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><svg><use href="#skip"/></svg></span><span class="idx"><svg><use href="#skip"/></svg></span><span class="idx br"><svg><use href="#skip"/></svg></span></span></a><a class="card yellow" href="not-your-turn.html" aria-label="Yellow 7"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><span>7</span></span><span class="idx">7</span><span class="idx br">7</span></span></a><a class="card green" href="not-your-turn.html" aria-label="Green 9"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big u"><span>9</span></span><span class="idx">9</span><span class="idx br">9</span></span></a><a class="card blue" href="not-your-turn.html" aria-label="Blue reverse"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><svg><use href="#reverse"/></svg></span><span class="idx"><svg><use href="#reverse"/></svg></span><span class="idx br"><svg><use href="#reverse"/></svg></span></span></a><a class="card black" href="not-your-turn.html" aria-label="Wild"><span class="face" aria-hidden="true"><span class="oval quad"></span><span class="idx"><span class="dot4"></span></span><span class="idx br"><span class="dot4"></span></span></span></a><a class="card black" href="not-your-turn.html" aria-label="Wild +4"><span class="face" aria-hidden="true"><span class="oval"></span><span class="mini" style="--mc:var(--yellow);--dx:calc(var(--cw)*-0.14);--dy:calc(var(--cw)*0.11)"></span><span class="mini" style="--mc:var(--green);--dx:calc(var(--cw)*-0.05);--dy:calc(var(--cw)*0.04)"></span><span class="mini" style="--mc:var(--blue);--dx:calc(var(--cw)*0.04);--dy:calc(var(--cw)*-0.03)"></span><span class="mini" style="--mc:var(--red);--dx:calc(var(--cw)*0.13);--dy:calc(var(--cw)*-0.1)"></span><span class="idx">+4</span><span class="idx br">+4</span></span></a></div></section><div class="actions"><a class="btn btn-secondary" href="not-your-turn.html">Draw</a></div>
+</main>
+</body>
+</html>

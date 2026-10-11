@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UNO (table)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,400;0,500;0,700;0,800;1,800;1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="skip" viewBox="0 0 100 100">
+    <g fill="none" stroke-linecap="round">
+      <circle cx="50" cy="50" r="31" stroke="#000" stroke-width="23"/>
+      <line x1="29" y1="71" x2="71" y2="29" stroke="#000" stroke-width="23"/>
+      <circle cx="50" cy="50" r="31" stroke="currentColor" stroke-width="13"/>
+      <line x1="29" y1="71" x2="71" y2="29" stroke="currentColor" stroke-width="13"/>
+    </g>
+  </symbol>
+  <symbol id="reverse" viewBox="0 0 100 100">
+    <g transform="rotate(-45 50 50)" fill="currentColor" stroke="#000" stroke-width="6" stroke-linejoin="round" paint-order="stroke">
+      <polygon points="14,27 56,27 56,15 84,34 56,53 56,41 14,41"/>
+      <polygon points="86,59 44,59 44,47 16,66 44,85 44,73 86,73"/>
+    </g>
+  </symbol>
+  <symbol id="clockwise" viewBox="0 0 100 100">
+    <path d="M50 20 A32 32 0 1 1 22.3 36" fill="none" stroke="currentColor" stroke-width="10" stroke-linecap="round"/>
+    <polygon points="27.3,27.4 29.8,45 10.8,34" fill="currentColor"/>
+  </symbol>
+</svg>
+<main class="tv glow-green">
+<header class="tv-head"><span class="game-name">UNO</span><a class="btn btn-secondary" href="uno-reset.html">Reset</a></header><div class="ring"><div class="seats"><a class="seat" href="uno-draw-for-alice.html"><span class="name">Alice</span><span class="count">1<small>card</small></span></a><a class="seat away" href="uno-draw-for-bob.html"><span class="name">Bob</span><span class="count">3<small>cards</small></span><span class="tag">Away</span></a><a class="seat current" href="uno-draw-for-carol.html"><span class="name">Carol</span><span class="count">9<small>cards</small></span></a></div><div class="table-mid"><div class="draw-pile"><span class="card black stack" role="img" aria-label="Draw pile"><span class="face" aria-hidden="true"><span class="oval back-oval"></span><span class="logo">UNO</span></span></span><span>41 cards</span></div><div class="top-card"><span class="card black" role="img" aria-label="Wild +4"><span class="face" aria-hidden="true"><span class="oval"></span><span class="mini" style="--mc:var(--yellow);--dx:calc(var(--cw)*-0.14);--dy:calc(var(--cw)*0.11)"></span><span class="mini" style="--mc:var(--green);--dx:calc(var(--cw)*-0.05);--dy:calc(var(--cw)*0.04)"></span><span class="mini" style="--mc:var(--blue);--dx:calc(var(--cw)*0.04);--dy:calc(var(--cw)*-0.03)"></span><span class="mini" style="--mc:var(--red);--dx:calc(var(--cw)*0.13);--dy:calc(var(--cw)*-0.1)"></span><span class="idx">+4</span><span class="idx br">+4</span></span></span></div><div class="table-info"><a class="turn" href="uno-finished.html">Carol's turn</a><p class="pending"><b>+4</b> for Carol</p><p class="facts"><span>Color: green</span><span><svg aria-hidden="true"><use href="#clockwise"/></svg>Clockwise</span></p></div></div><div class="seats"><a class="seat" href="uno-draw-for-frank.html"><span class="name">Frank</span><span class="count">5<small>cards</small></span></a><a class="seat" href="uno-draw-for-erin.html"><span class="name">Erin</span><span class="count">7<small>cards</small></span></a><a class="seat" href="uno-draw-for-dave.html"><span class="name">Dave</span><span class="count">4<small>cards</small></span></a></div></div><footer class="tv-foot"><span>Next game: <strong>Gus, Hana</strong></span><span>Tap a player to make them draw.</span></footer>
+</main>
+</body>
+</html>

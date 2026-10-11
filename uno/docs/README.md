@@ -3,8 +3,9 @@
 The first game on the LAN Party platform. Read the root `CLAUDE.md` first for the platform rules
 (roles, lobby/queue, disconnects, max players). This file covers only what is specific to UNO.
 
-- **URLs:** players open `/uno`; middle devices open `/uno/table`.
-- **Status:** Design. Requirements cleared; next step is approaches and design. No code yet.
+- **How to get here:** UNO has no URL of its own. Players stay on `/`; the table opens `/table` and
+  picks UNO from "Select the game", and every phone switches to UNO on its own (see `CLAUDE.md`).
+- **Status:** Design spec written in `design.md`, waiting for review. No code yet.
 
 ## Rule mode: enforced
 
@@ -82,17 +83,24 @@ rules avoids building that.
 
 ## Views
 
-**Phone (player, private)** at `/uno`
-- Join screen: enter a name, then Join.
-- Own hand.
+**Phone (player, private)**
+- Joining happens once per night on the platform's join screen at `/`, not inside UNO.
+- Own hand, sorted by color, then number.
+- Whose turn it is. When it's yours: "Your turn" with the hint "Match the top card on the table."
+- **No pile and no current color on the phone** (decided 2026-10-12). Everyone looks at the table
+  screen for the top card, like at a real table. The phone names the top card only in error messages,
+  e.g. "Doesn't match: red 7".
+- Playable cards are **not** highlighted. Spotting a match is up to the player, like at a real table;
+  the server still rejects mistakes.
 - Actions: play a card, draw a card. Plus prompts the rules need: Wild color, "Play it / Keep it" after
   a draw, Challenge / Accept / Stack on a +4, who to swap with on a 7.
 
-**Middle device (table, shared)** at `/uno/table`
+**Middle device (table, shared)**
 - Discard pile (top card) and draw pile.
 - Whose turn it is.
 - **Every player's card count** (public, like seeing the cards in someone's hand at a real table).
-- Controls: house-rule settings before the game, start/reset, and **draw for player** (see below).
+- Controls: house-rule settings before the game, start/reset, **draw for player** (see below), and
+  **Change game** in the lobby (back to "Select the game").
 
 ## Calling "UNO!": social, not a button
 
