@@ -9,7 +9,8 @@ see "Where things live".
 - **Stage:** Design (brainstorming, architectural path). No code yet.
 - **Process:** context → clarifying questions (done) → approaches (done) → design (done) → written spec
   (`uno/docs/design.md`, approved 2026-10-12, including the game-picker revision) → implementation plan
-  (`uno/docs/plan.md`, in progress) → code. No code until the user approves the plan.
+  (`uno/docs/plan.md`, written, waiting for the user's review) → code. No code until the user approves
+  the plan.
 - Keep this file updated: when an open question is answered, move it to "Decisions" with a one-line reason.
 
 ## Where things live
@@ -19,7 +20,7 @@ see "Where things live".
 | `CLAUDE.md` | Platform-level context (this file) |
 | `uno/docs/` | Everything about the UNO game. **Read `uno/docs/README.md` before working on UNO.** |
 | `uno/docs/design.md` | Design spec for the first build (platform + UNO): screens, architecture, rules engine, tests |
-| `uno/docs/plan.md` | Implementation plan for the first build (in progress) |
+| `uno/docs/plan.md` | Implementation plan for the first build: 13 tasks, test-first |
 | `mockups/` | Static HTML mockups of every phone and table screen (`phone/`, `table/`, shared `style.css`). Build the real screens to match them |
 | `lib/`, `test/`, ... | (not created yet) A standard Phoenix project at the repo root; layout in `uno/docs/design.md` §3 |
 

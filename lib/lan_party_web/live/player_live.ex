@@ -1,0 +1,114 @@
+defmodule LanPartyWeb.PlayerLive do
+  @moduledoc """
+  The phone at `/`: join once per night, wait for the table to pick a game, then that game's phone
+  screens. See uno/docs/design.md §2 and §4. Markup follows mockups/phone/.
+  """
+  use LanPartyWeb, :live_view
+
+  alias LanParty.{Games, Room}
+
+  @impl true
+  def mount(_params, %{"player_token" => token}, socket) do
+    if connected?(socket) do
+      Room.subscribe()
+      Process.monitor(Room)
+      Room.attach(token, self())
+    end
+
+    {:ok, socket |> assign(token: token, error: nil, name: "") |> assign_room(Room.get_state())}
+  end
+
+  @impl true
+  def handle_event("join", %{"name" => name}, socket) do
+    case Room.join(socket.assigns.token, name, self()) do
+      :ok -> {:noreply, assign(socket, error: nil)}
+      {:error, :already_joined} -> {:noreply, socket}
+      {:error, :name_taken} -> {:noreply, assign(socket, error: "That name is taken. Try another.", name: name)}
+      {:error, _reason} -> {:noreply, assign(socket, error: "Enter a name of up to 20 characters.", name: name)}
+    end
+  end
+
+  @impl true
+  def handle_info({:party_updated, room}, socket), do: {:noreply, assign_room(socket, room)}
+
+  # The Room crashed and restarted empty: reload so this phone lands on the join screen.
+  def handle_info({:DOWN, _ref, :process, _pid, _reason}, socket), do: {:noreply, redirect(socket, to: ~p"/")}
+
+  defp assign_room(socket, room) do
+    me = room.people[socket.assigns.token]
+
+    assign(socket,
+      room: room,
+      me: me,
+      kicked?: MapSet.member?(room.kicked, socket.assigns.token),
+      brand: if(me && room.game_id, do: Games.name(room.game_id), else: "LAN Party"),
+      glow: if(me && room.game_id == :uno, do: LanPartyWeb.Uno.PlayerComponent.glow(room, socket.assigns.token))
+    )
+  end
+
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <main class={["phone", @glow]}>
+      <header class="bar">
+        <span :if={@me}>Playing as <strong>{@me.name}</strong></span>
+        <span :if={!@me}></span>
+        <span class="brand">{@brand}</span>
+      </header>
+
+      <div :if={!@me} class="message">
+        <p :if={@kicked?} class="notice">
+          You were away too long and left the game. Join again for the next game.
+        </p>
+        <form class="join" id="join" phx-submit="join">
+          <label for="name">What's your name?</label>
+          <input
+            class="field"
+            id="name"
+            name="name"
+            autocomplete="nickname"
+            maxlength="20"
+            placeholder="Your name"
+            value={@name}
+            aria-invalid={@error && "true"}
+            aria-describedby={@error && "name-error"}
+          />
+          <p :if={@error} class="field-error" id="name-error">{@error}</p>
+          <button class="btn btn-primary" type="submit">Join</button>
+        </form>
+      </div>
+
+      <div :if={@me && is_nil(@room.game_id)} class="message">
+        <h1>You're in, {@me.name}.</h1>
+        <a class="wait">Waiting for the table to pick a game</a>
+        <div>
+          <p class="people-label">Here now</p>
+          <ul class="people">
+            <li :for={token <- @room.order} class={token == @token && "you"}>{Room.name(@room, token)}{if token == @token, do: " (you)"}</li>
+          </ul>
+        </div>
+      </div>
+
+      <.live_component
+        :if={@me && @room.game_id == :uno}
+        module={LanPartyWeb.Uno.PlayerComponent}
+        id="uno-phone"
+        room={@room}
+        token={@token}
+      />
+
+      <div
+        id="reconnect"
+        style="display: none"
+        phx-disconnected={JS.show(to: "#reconnect")}
+        phx-connected={JS.hide(to: "#reconnect")}
+      >
+        <div class="scrim"></div>
+        <div class="reconnect" role="status">
+          <strong>Reconnecting…</strong><span>Your phone lost the connection. Keep this page open.</span>
+        </div>
+      </div>
+    </main>
+    """
+  end
+end
