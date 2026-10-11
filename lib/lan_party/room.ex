@@ -61,7 +61,7 @@ defmodule LanParty.Room do
        people: %{},
        order: [],
        monitors: %{},
-       kicked: MapSet.new(),
+       kicked: %{},
        settings: Rules.default_settings(),
        game: nil,
        winner: nil
@@ -92,7 +92,7 @@ defmodule LanParty.Room do
             state
             | people: Map.put(state.people, token, person),
               order: state.order ++ [token],
-              kicked: MapSet.delete(state.kicked, token)
+              kicked: Map.delete(state.kicked, token)
           }
           |> watch(token, pid)
 
@@ -267,12 +267,15 @@ defmodule LanParty.Room do
       state
       | people: Map.delete(state.people, token),
         order: List.delete(state.order, token),
-        kicked: MapSet.put(state.kicked, token)
+        kicked: Map.put(state.kicked, token, person.name)
     }
 
-    if state.phase == :playing and person.status == :seated,
-      do: remove_from_round(state, token),
-      else: state
+    cond do
+      state.phase == :playing and person.status == :seated -> remove_from_round(state, token)
+      # A seat freed in the lobby goes straight to the first person in the queue.
+      state.phase == :lobby -> fill_seats(state)
+      true -> state
+    end
   end
 
   # Last player left wins (CLAUDE.md "Disconnects").

@@ -50,11 +50,12 @@ defmodule LanPartyWeb.PlayerLiveTest do
     assert has_element?(again, ".wait", "Waiting for the table to pick a game")
   end
 
-  test "a kicked phone is told why", %{conn: conn} do
-    :sys.replace_state(Room, fn state -> %{state | kicked: MapSet.put(state.kicked, "erin")} end)
+  test "a kicked phone is told why, with its name filled in", %{conn: conn} do
+    :sys.replace_state(Room, fn state -> %{state | kicked: Map.put(state.kicked, "erin", "Erin")} end)
     {:ok, view, _html} = live(phone(conn, "erin"), ~p"/")
 
     assert has_element?(view, ".notice", "You were away too long and left the game.")
+    assert has_element?(view, ~s(input#name[value="Erin"]))
   end
 
   test "when the Room restarts, the phone reloads", %{conn: conn} do

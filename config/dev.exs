@@ -7,7 +7,7 @@ config :lan_party, LanPartyWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "uPp8zbjYSxCV8TfH9v2zb9be7jtsyvnFEyY93DpBVfxQSxFrbtWBSGlZN1I8K9t",
+  secret_key_base: "PNzHlnkUdCorOBxCNDp7qR0Tf5vr8JgnUiqkmjAdhRSQ2qJ5MpCydFTk9GKTMzUG",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:lan_party, ~w(--sourcemap=inline --watch)]}
   ]

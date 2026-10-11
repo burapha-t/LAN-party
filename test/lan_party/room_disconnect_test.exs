@@ -30,7 +30,7 @@ defmodule LanParty.RoomDisconnectTest do
     state = Room.get_state(room)
     refute Map.has_key?(state.people, "t1")
     assert state.order == []
-    assert MapSet.member?(state.kicked, "t1")
+    assert state.kicked["t1"] == "Alice"
   end
 
   test "coming back within the grace period keeps the seat", %{room: room} do
@@ -60,7 +60,22 @@ defmodule LanParty.RoomDisconnectTest do
     Process.sleep(80)
 
     :ok = Room.join(room, "t1", "Alice", page())
-    refute MapSet.member?(Room.get_state(room).kicked, "t1")
+    refute Map.has_key?(Room.get_state(room).kicked, "t1")
+  end
+
+  test "in the lobby, a kicked player's seat goes to the first person in the queue", %{room: room} do
+    tab = page()
+    :ok = Room.join(room, "t1", "P1", tab)
+    for i <- 2..9, do: :ok = Room.join(room, "t#{i}", "P#{i}", page())
+    :ok = Room.pick_game(room, :uno)
+    assert Room.queued(Room.get_state(room)) == ["t9"]
+
+    close(tab)
+    Process.sleep(80)
+
+    state = Room.get_state(room)
+    assert Room.queued(state) == []
+    assert "t9" in Room.seated(state)
   end
 
   test "attaching a browser the Room doesn't know fails", %{room: room} do

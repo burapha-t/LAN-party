@@ -6,11 +6,14 @@ see "Where things live".
 
 ## Status
 
-- **Stage:** Design (brainstorming, architectural path). No code yet.
+- **Stage:** First build compiles and `mix test` passes (145 tests, 2026-10-12). Not yet tried on real
+  devices. Still to do: run `mix phx.server` and open it from a phone, compare the screens with
+  `mockups/` in a browser, and the party test (`uno/docs/plan.md` Task 13 Step 4).
 - **Process:** context → clarifying questions (done) → approaches (done) → design (done) → written spec
   (`uno/docs/design.md`, approved 2026-10-12, including the game-picker revision) → implementation plan
-  (`uno/docs/plan.md`, written, waiting for the user's review) → code. No code until the user approves
-  the plan.
+  (`uno/docs/plan.md`; the user hasn't reviewed it, but asked another session to implement it) → code
+  (written 2026-10-12 by subagents; the plan was updated to match the code review's fixes; compiled and
+  tested once Elixir 1.20.4 / OTP 29 was installed).
 - Keep this file updated: when an open question is answered, move it to "Decisions" with a one-line reason.
 
 ## Where things live
@@ -22,7 +25,8 @@ see "Where things live".
 | `uno/docs/design.md` | Design spec for the first build (platform + UNO): screens, architecture, rules engine, tests |
 | `uno/docs/plan.md` | Implementation plan for the first build: 13 tasks, test-first |
 | `mockups/` | Static HTML mockups of every phone and table screen (`phone/`, `table/`, shared `style.css`). Build the real screens to match them |
-| `lib/`, `test/`, ... | (not created yet) A standard Phoenix project at the repo root; layout in `uno/docs/design.md` §3 |
+| `lib/`, `test/`, ... | The Phoenix project (platform + UNO), hand-written without `mix phx.new`; layout in `uno/docs/design.md` §3 |
+| `.superpowers/sdd/plan/` | The implementing session's ledger (`progress.md`: rulings, deferred items) and code reviews |
 
 - Two URLs for the whole night: players open `/` (e.g. `http://<lan-ip>:<port>/`), middle devices open
   `/table`. Games don't have their own URLs; the table picks the game and every phone follows.
@@ -90,7 +94,8 @@ Replace the physical game kit with a web game hosted on the host's own computer,
 - A player joins **once per night** at `/` by entering a **name**. Names are required and must be unique
   among current players. Who has joined belongs to the night, not to a game.
 - Before the table picks a game, phones show "Waiting for the table to pick a game".
-- Max **8 players** per game. Seats go in arrival order; anyone beyond 8 waits in the queue.
+- Max **8 players** per game. Seats go in arrival order; anyone beyond 8 waits in the queue. A seat freed
+  in the lobby (someone was kicked) goes straight to the first person in the queue.
 - Someone who joins while a game is in progress waits in a **queue** for the next game.
 - When a game ends ("Play again") or the middle device resets it, everyone, including the queue, goes
   back to the lobby for the next game.
@@ -103,8 +108,8 @@ Replace the physical game kit with a web game hosted on the host's own computer,
 - When a player's connection drops, they get a **short grace period** (around 30 s; tune later).
   - If they reconnect in time, they keep their seat and their hand.
   - If not, they're **kicked**: forgotten for the night. Their cards and their turn are removed from the
-    game, and play continues with the rest. They can rejoin with a name, and then wait in the queue like
-    any late joiner.
+    game, and play continues with the rest. They can rejoin (the join screen fills in their old name),
+    and then wait in the queue like any late joiner.
 - The same grace period applies whatever the phone is showing: waiting for a game, a lobby, a queue, or
   a round.
 - **If only one player is left, that player wins.**
@@ -176,6 +181,9 @@ None right now.
 | Architecture: pure rules module per game + one Room process for the platform state | Standard Elixir shape; one process gives arrival-order handling for free; rules testable without a browser. Details in `uno/docs/design.md` |
 | Code layout: standard Phoenix project at the repo root; game docs stay in `<game>/docs/` | Matches Phoenix guides, which helps while learning the stack |
 | More than 8 people: seats in arrival order; seated players keep their seats at "Play again" | Simplest; revisit if parties regularly exceed 8 |
+| A seat freed in the lobby goes to the first person in the queue at once | User's choice (2026-10-12): don't make them wait an extra round |
+| A kicked player's join screen fills in their old name | User's choice (2026-10-12): matches the mockup; one tap to rejoin |
+| Fonts load from Google Fonts; offline, pages fall back to the system font | User's choice (2026-10-12): most party Wi-Fi has internet; the game works either way |
 | Planned games after UNO: Liar's Dice, Quiplash, Paranoia, Who wrote it?, Love Letter, Never Have I Ever, Killer | User's choice. Liar's Dice is a small build that fits the kick and last-player-wins rules; Quiplash has no turns, so the shared lobby code won't assume turn-based play; Paranoia, Who wrote it?, Never Have I Ever and Killer are about the people in the room; Love Letter is a tiny card game |
 
 ## Working agreements for future sessions

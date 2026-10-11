@@ -4,7 +4,7 @@ import Config
 # you can enable the server option below.
 config :lan_party, LanPartyWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "qDK75qUyprohDrgGMA4EKUyBX5z0QPckBssJfH5L2U9G4tbnrpkKVj3faXBJVt9",
+  secret_key_base: "5w4alpN6C8Rc5u7VnJtrx95FNEnF0d6ArJx4Gh6bJDUNfRWX3L0MDzyEdBuMHfsf",
   server: false
 
 # Print only warnings and errors during test

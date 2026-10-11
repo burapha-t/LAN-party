@@ -466,6 +466,8 @@ a.wait:hover {
 
 .ring { flex: 1; display: grid; grid-template-rows: auto 1fr auto; gap: clamp(12px, 2vw, 36px); }
 .seats { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 1.6vw, 28px); }
+/* 7–8 players: 4 seats per row on a wide table screen; narrow screens keep one column (below). */
+@media (min-width: 761px) { .seats.four { grid-template-columns: repeat(4, 1fr); } }
 
 .seat {
   display: grid;

@@ -34,7 +34,7 @@ restart, playing the other planned games (the picker lists them as not built yet
 | Situation | What the phone shows |
 |---|---|
 | Not joined | Name field + **Join**. A taken name shows "That name is taken". Joining is once per night. |
-| Came back after being kicked | The join screen, plus "You were away too long and left the game. Join again for the next game." |
+| Came back after being kicked | The join screen, plus "You were away too long and left the game. Join again for the next game.", with their old name already filled in. |
 | Joined, no game picked yet | "Waiting for the table to pick a game". |
 | In the UNO lobby | "You're in. Waiting for the table to start", and the list of players. |
 | In the queue | "Game in progress. You're #2 in line." |
@@ -79,7 +79,8 @@ with.
    disappears. The target can still accept or stack.
 7. **More than 8 people:** seats go in arrival order. At "Play again", seated players keep their seats,
    and queued players fill any free seats in arrival order. Picking a game (including picking UNO
-   again after Change game) re-seats everyone in arrival order, up to 8; the rest are queued.
+   again after Change game) re-seats everyone in arrival order, up to 8; the rest are queued. A seat
+   freed in the lobby (someone was kicked) goes straight to the first person in the queue.
 8. **If both piles run out** while drawing, the player draws as many as there are and the rest are
    skipped.
 9. **Change game only from the lobby.** During a round the table shows Reset, not Change game, so no
@@ -152,8 +153,9 @@ uno/docs/                                # stays where it is
   unique ref, so an old timer can't kick a player who came back.
   - Back in time → timer cancelled; seat and hand kept.
   - Timer fires → the token is forgotten and the seat freed. If a round is running, the Room calls
-    `Uno.Rules.remove_player`. The token goes into a `kicked` set so the phone can show the "away too
-    long" message; it's removed from the set when they join again.
+    `Uno.Rules.remove_player`. The token goes into `kicked` with the player's name, so the phone can show
+    the "away too long" message and fill in the name; it's removed when they join again. In the lobby,
+    the freed seat goes to the first person in the queue.
 - Same rule while waiting for a game, in the lobby, in the queue, and during a round. If it's an away
   player's turn, the game waits. A kicked player is forgotten for the night and joins again with a name.
 - Table devices have no identity and no grace period.
@@ -169,7 +171,7 @@ uno/docs/                                # stays where it is
   people:   %{token => %{name, status: :seated | :queued, pids, away_ref}},
   order:    [token],        # arrival order; seated tokens in this order give the turn order
   monitors: %{ref => {token, pid}},
-  kicked:   MapSet.t(),     # tokens kicked since they last joined
+  kicked:   %{token => name},  # kicked since they last joined; the name is offered back on the join screen
   settings: map,            # UNO house rules, from Uno.Rules.default_settings/0; kept all night
   game:     nil | %Uno.Rules{},
   winner:   nil | token
@@ -320,6 +322,8 @@ leaves the server.
 
 - On the first run, Windows asks whether to let `erl.exe` through the firewall. The host must allow
   **Private networks**. The README will say so.
+- The mockups' font (Rubik) loads from Google Fonts. On a Wi-Fi without internet the pages fall back to
+  the system font; the game works the same. Accepted by the user (2026-10-12).
 
 ## 8. Errors and failures
 

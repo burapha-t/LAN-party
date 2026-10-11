@@ -513,6 +513,17 @@ defmodule LanParty.UnoHelpers do
     hands ++ [start | rest]
   end
 
+  @doc "Waits until each view has handled every message already queued for it (e.g. a Room broadcast), so the next render isn't stale."
+  def sync(views) when is_list(views) do
+    Enum.each(views, &sync/1)
+    views
+  end
+
+  def sync(%Phoenix.LiveViewTest.View{pid: pid} = view) do
+    _ = :sys.get_state(pid)
+    view
+  end
+
   @doc "Gives LiveView tests a fresh app-wide Room."
   def restart_room do
     :ok = Supervisor.terminate_child(LanParty.Supervisor, LanParty.Room)
@@ -1897,7 +1908,8 @@ Expected: all tests pass, no compiler warnings.
     (topic, default `"party"`).
   - Broadcast `{:party_updated, state}` after every change. State keys: `topic, grace_ms, game_opts,
     game_id, phase, people, order, monitors, kicked, settings, game, winner`; person =
-    `%{name, status: :seated | :queued, pids: MapSet, away_ref: nil | reference}`.
+    `%{name, status: :seated | :queued, pids: MapSet, away_ref: nil | reference}`; `kicked` =
+    `%{token => name}` (filled in Task 9).
   - Pure readers for the LiveViews: `Room.seated/1`, `Room.queued/1`, `Room.away?/1` (person),
     `Room.name/2` (state, token → name or nil).
   - Errors: `:already_joined`, `:invalid_name`, `:name_taken`, `:not_playable`, `:not_now`,
@@ -2208,7 +2220,7 @@ defmodule LanParty.Room do
        people: %{},
        order: [],
        monitors: %{},
-       kicked: MapSet.new(),
+       kicked: %{},
        settings: Rules.default_settings(),
        game: nil,
        winner: nil
@@ -2239,7 +2251,7 @@ defmodule LanParty.Room do
             state
             | people: Map.put(state.people, token, person),
               order: state.order ++ [token],
-              kicked: MapSet.delete(state.kicked, token)
+              kicked: Map.delete(state.kicked, token)
           }
           |> watch(token, pid)
 
@@ -2396,8 +2408,10 @@ handler. If you see "received unexpected message in handle_info/2" warnings, the
 **Interfaces:**
 - Consumes: Task 8's `watch/3` monitors and `state.monitors`; `Rules.remove_player/2`.
 - Produces: a person whose last page closed is *away* (`Room.away?/1`); after `grace_ms` without a page
-  they're removed from `people` and `order`, added to `kicked`, and taken out of a running round. If
-  one player is left in a round, the phase becomes `:finished` with them as the winner.
+  they're removed from `people` and `order`, added to `kicked` as `token => name` (so their phone can
+  fill in the name), and taken out of a running round. If one player is left in a round, the phase
+  becomes `:finished` with them as the winner. A seat freed in the lobby goes straight to the first
+  person in the queue.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -2436,7 +2450,7 @@ defmodule LanParty.RoomDisconnectTest do
     state = Room.get_state(room)
     refute Map.has_key?(state.people, "t1")
     assert state.order == []
-    assert MapSet.member?(state.kicked, "t1")
+    assert state.kicked["t1"] == "Alice"
   end
 
   test "coming back within the grace period keeps the seat", %{room: room} do
@@ -2466,7 +2480,22 @@ defmodule LanParty.RoomDisconnectTest do
     Process.sleep(80)
 
     :ok = Room.join(room, "t1", "Alice", page())
-    refute MapSet.member?(Room.get_state(room).kicked, "t1")
+    refute Map.has_key?(Room.get_state(room).kicked, "t1")
+  end
+
+  test "in the lobby, a kicked player's seat goes to the first person in the queue", %{room: room} do
+    tab = page()
+    :ok = Room.join(room, "t1", "P1", tab)
+    for i <- 2..9, do: :ok = Room.join(room, "t#{i}", "P#{i}", page())
+    :ok = Room.pick_game(room, :uno)
+    assert Room.queued(Room.get_state(room)) == ["t9"]
+
+    close(tab)
+    Process.sleep(80)
+
+    state = Room.get_state(room)
+    assert Room.queued(state) == []
+    assert "t9" in Room.seated(state)
   end
 
   test "attaching a browser the Room doesn't know fails", %{room: room} do
@@ -2560,12 +2589,15 @@ Add these helpers in the `## Helpers` section:
       state
       | people: Map.delete(state.people, token),
         order: List.delete(state.order, token),
-        kicked: MapSet.put(state.kicked, token)
+        kicked: Map.put(state.kicked, token, person.name)
     }
 
-    if state.phase == :playing and person.status == :seated,
-      do: remove_from_round(state, token),
-      else: state
+    cond do
+      state.phase == :playing and person.status == :seated -> remove_from_round(state, token)
+      # A seat freed in the lobby goes straight to the first person in the queue.
+      state.phase == :lobby -> fill_seats(state)
+      true -> state
+    end
   end
 
   # Last player left wins (CLAUDE.md "Disconnects").
@@ -2639,10 +2671,8 @@ symbols the card faces use (copied from the mockups).
       rel="stylesheet"
     />
     <link phx-track-static rel="stylesheet" href={~p"/assets/css/app.css"} />
-    <%!-- iOS Safari only delivers taps on elements it thinks are clickable, and LiveView listens for
-         clicks on window: without this, tapping an <a phx-click> with no href may do nothing on an
-         iPhone. Kept here so app.css stays an exact copy of mockups/style.css. --%>
-    <style>[phx-click] { cursor: pointer; }</style>
+    <%!-- iOS Safari only delivers delegated clicks to clickable elements, so phx-click targets need a pointer cursor. --%>
+    <style phx-no-curly-interpolation>[phx-click] { cursor: pointer; }</style>
     <script defer phx-track-static type="text/javascript" src={~p"/assets/js/app.js"}>
     </script>
   </head>
@@ -2814,11 +2844,12 @@ defmodule LanPartyWeb.PlayerLiveTest do
     assert has_element?(again, ".wait", "Waiting for the table to pick a game")
   end
 
-  test "a kicked phone is told why", %{conn: conn} do
-    :sys.replace_state(Room, fn state -> %{state | kicked: MapSet.put(state.kicked, "erin")} end)
+  test "a kicked phone is told why, with its name filled in", %{conn: conn} do
+    :sys.replace_state(Room, fn state -> %{state | kicked: Map.put(state.kicked, "erin", "Erin")} end)
     {:ok, view, _html} = live(phone(conn, "erin"), ~p"/")
 
     assert has_element?(view, ".notice", "You were away too long and left the game.")
+    assert has_element?(view, ~s(input#name[value="Erin"]))
   end
 
   test "when the Room restarts, the phone reloads", %{conn: conn} do
@@ -2869,6 +2900,7 @@ defmodule LanPartyWeb.TableLiveTest do
     table |> element(".shelf-aside button", "Play UNO") |> render_click()
 
     assert Room.get_state().game_id == :uno
+    sync(phone)
     assert has_element?(phone, ".brand", "UNO")
   end
 
@@ -2994,7 +3026,10 @@ defmodule LanPartyWeb.PlayerLive do
       Room.attach(token, self())
     end
 
-    {:ok, socket |> assign(token: token, error: nil, name: "") |> assign_room(Room.get_state())}
+    room = Room.get_state()
+
+    # A kicked player coming back finds their old name already filled in.
+    {:ok, socket |> assign(token: token, error: nil, name: Map.get(room.kicked, token, "")) |> assign_room(room)}
   end
 
   @impl true
@@ -3019,7 +3054,7 @@ defmodule LanPartyWeb.PlayerLive do
     assign(socket,
       room: room,
       me: me,
-      kicked?: MapSet.member?(room.kicked, socket.assigns.token),
+      kicked?: Map.has_key?(room.kicked, socket.assigns.token),
       brand: if(me && room.game_id, do: Games.name(room.game_id), else: "LAN Party"),
       glow: nil
     )
@@ -3059,7 +3094,7 @@ defmodule LanPartyWeb.PlayerLive do
 
       <div :if={@me && is_nil(@room.game_id)} class="message">
         <h1>You're in, {@me.name}.</h1>
-        <p class="wait">Waiting for the table to pick a game</p>
+        <a class="wait">Waiting for the table to pick a game</a>
         <div>
           <p class="people-label">Here now</p>
           <ul class="people">
@@ -3263,6 +3298,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
     erin |> form("#join", %{name: "Erin"}) |> render_submit()
     :ok = Room.join("bob", "Bob", page())
     :ok = Room.pick_game(:uno)
+    sync(erin)
     %{erin: erin}
   end
 
@@ -3270,13 +3306,13 @@ defmodule LanPartyWeb.UnoPhoneTest do
   defp page, do: spawn(fn -> Process.sleep(:infinity) end)
   defp use_deck(deck), do: :sys.replace_state(Room, &%{&1 | game_opts: [deck: deck, first_player: "erin"]})
   defp start!, do: :ok = Room.start_game()
-  defp tap(view, id), do: view |> element(~s(.hand a.card[phx-value-id="#{id}"])) |> render_click()
+  defp tap_card(view, id), do: view |> element(~s(.hand a.card[phx-value-id="#{id}"])) |> render_click()
 
   # Change the running game behind the scenes, then let the phone re-render.
   defp tweak_game(view, fun) do
     :sys.replace_state(Room, fn state -> %{state | game: fun.(state.game)} end)
     send(view.pid, {:party_updated, Room.get_state()})
-    view
+    sync(view)
   end
 
   defp facing_plus4(game) do
@@ -3300,6 +3336,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
 
   test "a phone shows only its own hand, never the pile or the color", %{erin: erin} do
     start!()
+    sync(erin)
 
     for id <- [1, 2, 3, 4, 5, 7, 8], do: assert(has_element?(erin, ~s(.hand a.card[phx-value-id="#{id}"])))
     for id <- 9..15, do: refute(has_element?(erin, ~s(.hand a.card[phx-value-id="#{id}"])))
@@ -3312,7 +3349,8 @@ defmodule LanPartyWeb.UnoPhoneTest do
 
   test "tapping a card plays it", %{erin: erin} do
     start!()
-    tap(erin, 2)
+    sync(erin)
+    tap_card(erin, 2)
 
     assert Rules.top_card(Room.get_state().game).id == 2
     assert has_element?(erin, ".turn", "Bob's turn")
@@ -3321,8 +3359,9 @@ defmodule LanPartyWeb.UnoPhoneTest do
 
   test "a card out of turn gets Not your turn; OK hides it", %{erin: erin} do
     start!()
-    tap(erin, 2)
-    tap(erin, 3)
+    sync(erin)
+    tap_card(erin, 2)
+    tap_card(erin, 3)
 
     assert has_element?(erin, ".toast", "Not your turn")
     erin |> element(".toast") |> render_click()
@@ -3332,7 +3371,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
   test "a card that doesn't match names the top card", %{erin: erin} do
     start!()
     tweak_game(erin, fn game -> put_in(game.hands["erin"], [c(50, :blue, 9), c(2, :red, 1)]) end)
-    tap(erin, 50)
+    tap_card(erin, 50)
 
     assert has_element?(erin, ".toast", "Doesn't match: red 5")
   end
@@ -3340,7 +3379,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
   test "a Wild asks for a color first; only the four colors count", %{erin: erin} do
     start!()
     tweak_game(erin, fn game -> put_in(game.hands["erin"], [c(60, nil, :wild), c(2, :red, 1)]) end)
-    tap(erin, 60)
+    tap_card(erin, 60)
     assert has_element?(erin, ".sheet h2", "Pick a color")
 
     render_click(with_target(erin, "#uno-phone"), "pick_color", %{"color" => "purple"})
@@ -3354,7 +3393,8 @@ defmodule LanPartyWeb.UnoPhoneTest do
   test "a 7 under 7-0 asks who to swap with", %{erin: erin} do
     :ok = Room.update_settings(%{seven_zero: true})
     start!()
-    tap(erin, 8)
+    sync(erin)
+    tap_card(erin, 8)
 
     assert has_element?(erin, ".sheet h2", "Swap hands with…")
     erin |> element(".pick-list a", "Bob") |> render_click()
@@ -3379,7 +3419,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
     tweak_game(erin, &facing_plus4/1)
 
     assert has_element?(erin, ".hint", "Or tap a +4 in your hand to stack it.")
-    tap(erin, 2)
+    tap_card(erin, 2)
     assert has_element?(erin, ".toast", "Draw 4, challenge, or stack a +4 first")
   end
 
@@ -3396,6 +3436,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
   test "a starting Wild asks the first player for the color", %{erin: erin} do
     use_deck(deck_starting_with(2, :wild))
     start!()
+    sync(erin)
 
     assert has_element?(erin, ".sheet h2", "Pick the starting color")
     erin |> element(".swatch.blue") |> render_click()
@@ -3405,7 +3446,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
   test "the winner's phone says You won!", %{erin: erin} do
     start!()
     tweak_game(erin, fn game -> put_in(game.hands["erin"], [c(2, :red, 1)]) end)
-    tap(erin, 2)
+    tap_card(erin, 2)
 
     assert has_element?(erin, "h1.huge", "You won!")
     assert has_element?(erin, ".wait", "Waiting for the table")
@@ -3455,7 +3496,6 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
   def glow(%{phase: :finished, game: %{color: color}}, _token) when not is_nil(color), do: "glow-#{color}"
   def glow(_room, _token), do: nil
 
-  # Overriding update/2 means LiveView no longer assigns :id for us; the template needs it.
   @impl true
   def update(%{id: id, room: room, token: token}, socket) do
     in_round? = not is_nil(room.game) and Map.has_key?(room.game.hands, token)
@@ -3466,14 +3506,10 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
      |> assign(id: id, room: room, token: token, view: view)
      |> assign(screen: screen(room, room.people[token], in_round?), stage: stage(view, room), hint: hint(view))
      |> assign_new(:sheet, fn -> nil end)
+     |> then(fn socket -> if room.phase == :playing, do: socket, else: assign(socket, sheet: nil) end)
      |> assign_new(:error, fn -> nil end)
-     |> assign_new(:dismissed, fn -> nil end)
-     |> close_sheet_outside_round()}
+     |> assign_new(:dismissed, fn -> nil end)}
   end
-
-  # A picker left open when the round ends must not come back in the next one.
-  defp close_sheet_outside_round(%{assigns: %{room: %{phase: :playing}}} = socket), do: socket
-  defp close_sheet_outside_round(socket), do: assign(socket, sheet: nil)
 
   ## Events
 
@@ -3630,7 +3666,7 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
     <div id={@id} style="display: contents">
       <div :if={@screen == :lobby} class="message">
         <h1>You're in.</h1>
-        <p class="wait">Waiting for the table to start</p>
+        <a class="wait">Waiting for the table to start</a>
         <div>
           <p class="people-label">Players</p>
           <ul class="people">
@@ -3644,9 +3680,9 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
       <div :if={@screen == :queue} class="message">
         <h1>{"You're ##{queue_number(@room, @token)} in line."}</h1>
         <p :if={@room.phase != :lobby} class="lead">A game is in progress. You'll play in the next one.</p>
-        <p :if={@room.phase != :lobby} class="wait">Waiting for this round to end</p>
+        <a :if={@room.phase != :lobby} class="wait">Waiting for this round to end</a>
         <p :if={@room.phase == :lobby} class="lead">The table is full. You'll play in the next one.</p>
-        <p :if={@room.phase == :lobby} class="wait">Waiting for a free seat</p>
+        <a :if={@room.phase == :lobby} class="wait">Waiting for a free seat</a>
       </div>
 
       <div :if={@screen == :finished} class="message centered">
@@ -3655,7 +3691,7 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
         <p :if={@room.winner != @token} class="lead">
           Last card: {Card.label(LanParty.Uno.Rules.top_card(@room.game))}
         </p>
-        <p class="wait">Waiting for the table</p>
+        <a class="wait">Waiting for the table</a>
       </div>
 
       <%= if @screen == :playing do %>
@@ -3670,7 +3706,7 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
               <p class="your-turn">Your turn</p>
               <p class="stage-hint">Match the top card on the table.</p>
             <% {:turn, name} -> %>
-              <p class="turn">{name}'s turn</p>
+              <a class="turn">{name}'s turn</a>
           <% end %>
         </div>
 
@@ -3849,6 +3885,7 @@ defmodule LanPartyWeb.UnoTableTest do
 
   defp start_round(table) do
     :ok = Room.join("bob", "Bob", page())
+    sync(table)
     table |> element("button", "Start game") |> render_click()
   end
 
@@ -3862,6 +3899,7 @@ defmodule LanPartyWeb.UnoTableTest do
 
   test "with two players the table can start", %{table: table} do
     :ok = Room.join("bob", "Bob", page())
+    sync(table)
 
     assert has_element?(table, ".lobby-note", "2 of 8 seats taken.")
     refute has_element?(table, "button[disabled]", "Start game")
@@ -3924,6 +3962,7 @@ defmodule LanPartyWeb.UnoTableTest do
     start_round(table)
     :sys.replace_state(Room, fn state -> put_in(state.game.hands["erin"], [c(2, :red, 1)]) end)
     :ok = Room.act("erin", {:play, 2, %{}})
+    sync(table)
 
     assert has_element?(table, ".winner h1", "Erin won")
     assert has_element?(table, ".leftovers", "Bob")
@@ -3971,7 +4010,6 @@ defmodule LanPartyWeb.Uno.TableComponent do
 
   def main_class(_room), do: "tv"
 
-  # Overriding update/2 means LiveView no longer assigns :id for us; the template needs it.
   @impl true
   def update(%{id: id, room: room}, socket) do
     view = if room.game, do: View.table_view(room.game)
@@ -4134,7 +4172,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
             <button class="btn btn-secondary" phx-click="ask_reset" phx-target={@myself}>Reset</button>
           </header>
           <div class="ring">
-            <div class="seats" style={"grid-template-columns: repeat(#{max(length(@top_row), 1)}, 1fr)"}>
+            <div class={["seats", length(@top_row) > 3 && "four"]}>
               <.seat
                 :for={{token, count} <- @top_row}
                 token={token}
@@ -4165,7 +4203,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
                 </p>
               </div>
             </div>
-            <div class="seats" style={"grid-template-columns: repeat(#{max(length(@bottom_row), 1)}, 1fr)"}>
+            <div class={["seats", length(@bottom_row) > 3 && "four"]}>
               <.seat
                 :for={{token, count} <- @bottom_row}
                 token={token}
@@ -4228,6 +4266,10 @@ defmodule LanPartyWeb.Uno.TableComponent do
   end
 end
 ```
+
+Rows of 4 (7–8 players) get the `four` class. Its rule lives in `mockups/style.css`
+(`@media (min-width: 761px) { .seats.four { … } }`), so `assets/css/app.css` must be a fresh copy of
+it: run `Copy-Item mockups/style.css assets/css/app.css -Force` again if your copy predates that rule.
 
 - [ ] **Step 4: Render it from `TableLive`**
 
@@ -4311,14 +4353,13 @@ iPad is the table. Nothing to install for guests.
 
 - [ ] **Step 2: Update `CLAUDE.md`**
 
-In "Status", set the stage line to:
+`CLAUDE.md` belongs to the planning session, which makes this edit (done 2026-10-12):
+- "Status": the stage says the first build is written but never compiled or run, and names the next
+  steps (install Elixir, `mix setup`, `mix test`, the party test).
+- "Where things live": the `lib/`, `test/` row describes the hand-written Phoenix project, and a row
+  points to the implementing session's ledger in `.superpowers/sdd/plan/`.
 
-```markdown
-- **Stage:** First build implemented (platform + UNO). See "Where things live" for the code.
-```
-
-In "Where things live", change the `lib/`, `test/` row's text from "(not created yet) A standard
-Phoenix project…" to "The Phoenix project (platform + UNO); layout in `uno/docs/design.md` §3".
+Update the Status line again once `mix test` and the party test have passed.
 
 - [ ] **Step 3: Run the whole suite**
 

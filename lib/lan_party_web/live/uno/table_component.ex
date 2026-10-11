@@ -187,7 +187,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
             <button class="btn btn-secondary" phx-click="ask_reset" phx-target={@myself}>Reset</button>
           </header>
           <div class="ring">
-            <div class="seats">
+            <div class={["seats", length(@top_row) > 3 && "four"]}>
               <.seat
                 :for={{token, count} <- @top_row}
                 token={token}
@@ -218,7 +218,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
                 </p>
               </div>
             </div>
-            <div class="seats">
+            <div class={["seats", length(@bottom_row) > 3 && "four"]}>
               <.seat
                 :for={{token, count} <- @bottom_row}
                 token={token}

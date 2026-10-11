@@ -15,7 +15,10 @@ defmodule LanPartyWeb.PlayerLive do
       Room.attach(token, self())
     end
 
-    {:ok, socket |> assign(token: token, error: nil, name: "") |> assign_room(Room.get_state())}
+    room = Room.get_state()
+
+    # A kicked player coming back finds their old name already filled in.
+    {:ok, socket |> assign(token: token, error: nil, name: Map.get(room.kicked, token, "")) |> assign_room(room)}
   end
 
   @impl true
@@ -40,7 +43,7 @@ defmodule LanPartyWeb.PlayerLive do
     assign(socket,
       room: room,
       me: me,
-      kicked?: MapSet.member?(room.kicked, socket.assigns.token),
+      kicked?: Map.has_key?(room.kicked, socket.assigns.token),
       brand: if(me && room.game_id, do: Games.name(room.game_id), else: "LAN Party"),
       glow: if(me && room.game_id == :uno, do: LanPartyWeb.Uno.PlayerComponent.glow(room, socket.assigns.token))
     )
