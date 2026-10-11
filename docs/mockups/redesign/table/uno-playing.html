@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UNO (table)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&family=Nunito:wght@700;800;900&family=Rubik:ital,wght@1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="clockwise" viewBox="0 0 100 100">
+    <path d="M50 20 A32 32 0 1 1 22.3 36" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/>
+    <polygon points="27.3,27.4 29.8,45 10.8,34" fill="currentColor" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+<main class="tv">
+<header class="tv-head"><span class="wordmark">UNO</span><a class="btn btn-quiet" href="../../uno/table/reset.html">Reset</a></header>
+<div class="ring">
+<div class="seats"><a class="seat" href="../../uno/table/draw-for-alice.html"><span class="avatar p1" aria-hidden="true">A</span><span class="who"><span class="name">Alice</span></span><span class="count">1<small>card</small></span></a><a class="seat away" href="../../uno/table/draw-for-bob.html"><span class="avatar p2" aria-hidden="true">B</span><span class="who"><span class="name">Bob</span><span class="pill"><span class="dot sun"></span>Away</span></span><span class="count">3<small>cards</small></span></a><a class="seat current" href="../../uno/table/draw-for-carol.html"><span class="avatar p3" aria-hidden="true">C</span><span class="who"><span class="name">Carol</span></span><span class="count">9<small>cards</small></span></a></div>
+<div class="felt felt-green"><div class="draw-pile"><span class="card black stack" role="img" aria-label="Draw pile"><span class="face" aria-hidden="true"><span class="oval back-oval"></span><span class="logo">UNO</span></span></span><span>41 cards</span></div><div class="top-card"><span class="card black" role="img" aria-label="Wild +4"><span class="face" aria-hidden="true"><span class="oval"></span><span class="mini" style="--mc:var(--yellow);--dx:calc(var(--cw)*-0.14);--dy:calc(var(--cw)*0.11)"></span><span class="mini" style="--mc:var(--green);--dx:calc(var(--cw)*-0.05);--dy:calc(var(--cw)*0.04)"></span><span class="mini" style="--mc:var(--blue);--dx:calc(var(--cw)*0.04);--dy:calc(var(--cw)*-0.03)"></span><span class="mini" style="--mc:var(--red);--dx:calc(var(--cw)*0.13);--dy:calc(var(--cw)*-0.1)"></span><span class="idx">+4</span><span class="idx br">+4</span></span></span></div><div class="table-info"><a class="turn" href="../../uno/table/finished.html">Carol's turn</a><p class="pending"><b>+4</b> for Carol</p><p class="facts"><span class="pill"><span class="dot green"></span>Color: green</span><span class="pill"><svg aria-hidden="true"><use href="#clockwise"/></svg>Clockwise</span></p></div></div>
+<div class="seats"><a class="seat" href="../../uno/table/draw-for-frank.html"><span class="avatar p6" aria-hidden="true">F</span><span class="who"><span class="name">Frank</span></span><span class="count">5<small>cards</small></span></a><a class="seat" href="../../uno/table/draw-for-erin.html"><span class="avatar p5" aria-hidden="true">E</span><span class="who"><span class="name">Erin</span></span><span class="count">7<small>cards</small></span></a><a class="seat" href="../../uno/table/draw-for-dave.html"><span class="avatar p4" aria-hidden="true">D</span><span class="who"><span class="name">Dave</span></span><span class="count">4<small>cards</small></span></a></div>
+</div>
+<footer class="tv-foot"><span class="next">Next game: <span class="faces" aria-hidden="true"><span class="avatar p7">G</span><span class="avatar p8">H</span></span><strong>Gus, Hana</strong></span><span>Tap a player to make them draw.</span></footer>
+</main>
+</body>
+</html>

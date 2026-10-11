@@ -2983,7 +2983,7 @@ Expected: FAIL. `/` is still the generated page and `/table` doesn't exist, so `
 - [ ] **Step 6: Implement the shared card components**
 
 Create `lib/lan_party_web/live/uno/components.ex`. The markup is the mockups' card markup
-(`docs/mockups/phone/turn-mine.html`), one face per kind of card:
+(`docs/mockups/uno/phone/turn-mine.html`), one face per kind of card:
 
 ```elixir
 defmodule LanPartyWeb.Uno.Components do
@@ -3067,7 +3067,7 @@ end
 
 - [ ] **Step 7: Implement `PlayerLive`**
 
-Create `lib/lan_party_web/live/player_live.ex` (markup from `docs/mockups/phone/index.html`,
+Create `lib/lan_party_web/live/player_live.ex` (markup from `docs/mockups/platform/phone/index.html`,
 `join-taken.html`, `join-kicked.html`, `waiting-game.html`, `reconnecting.html`):
 
 ```elixir
@@ -3188,7 +3188,7 @@ end
 
 - [ ] **Step 8: Implement `TableLive` with "Select the game"**
 
-Create `lib/lan_party_web/live/table_live.ex` (markup from `docs/mockups/table/index.html`; the spine colors
+Create `lib/lan_party_web/live/table_live.ex` (markup from `docs/mockups/platform/table/index.html`; the spine colors
 and sizes are copied from it):
 
 ```elixir
@@ -3309,7 +3309,7 @@ Expected: all pass.
 - [ ] **Step 10: Compare against the mockups in a browser**
 
 Run: `mix phx.server`, open `http://localhost:4000/` and `http://localhost:4000/table` next to
-`docs/mockups/phone/index.html`, `docs/mockups/phone/waiting-game.html` and `docs/mockups/table/index.html` (open the
+`docs/mockups/platform/phone/index.html`, `docs/mockups/platform/phone/waiting-game.html` and `docs/mockups/platform/table/index.html` (open the
 mockup files directly in the browser). Use the browser's phone emulation for `/`. They should look the
 same apart from names. If the mockup files changed since this plan was written, align the markup and
 copy with them now.
@@ -3917,7 +3917,7 @@ a mockup changed since this plan was written, align markup and copy with it.
 - Produces: `LanPartyWeb.Uno.TableComponent` (LiveComponent, id `"uno-table"`, assign `room`) and
   `TableComponent.main_class/1 :: String.t()` for the table's `<main>`.
 
-Screens and copy come from `docs/mockups/table/uno-lobby.html`, `uno-lobby-waiting.html`,
+Screens and copy come from `docs/mockups/uno/table/lobby.html`, `uno-lobby-waiting.html`,
 `uno-playing.html`, `uno-draw-for-*.html`, `uno-reset.html`, `uno-finished.html`.
 
 - [ ] **Step 1: Write the failing tests**

@@ -14,6 +14,8 @@ see "Where things live".
   (`docs/uno/plan.md`; the user hasn't reviewed it, but asked another session to implement it) → code
   (written 2026-10-12 by subagents; the plan was updated to match the code review's fixes; compiled and
   tested once Elixir 1.20.4 / OTP 29 was installed).
+- **Liar's Dice:** clarifying questions done → design (approved in chat 2026-10-12) → written spec
+  (`docs/liars-dice/design.md`, with mockups, waiting for the user's review) → implementation plan → code.
 - Keep this file updated: when an open question is answered, move it to "Decisions" with a one-line reason.
 
 ## Where things live
@@ -25,7 +27,8 @@ see "Where things live".
 | `docs/uno/` | Everything about the UNO game. **Read `docs/uno/README.md` before working on UNO.** |
 | `docs/uno/design.md` | Design spec for the first build (platform + UNO): screens, architecture, rules engine, tests |
 | `docs/uno/plan.md` | Implementation plan for the first build: 13 tasks, test-first |
-| `docs/mockups/` | Static HTML mockups of every phone and table screen (`phone/`, `table/`, shared `style.css`). Build the real screens to match them |
+| `docs/liars-dice/` | Everything about Liar's Dice. **Read `docs/liars-dice/README.md` before working on it.** `design.md` is its spec, including the platform changes for a second game |
+| `docs/mockups/` | Static HTML mockups of every phone and table screen, grouped by game: `<game>/phone/`, `<game>/table/`, plus `platform/` for the screens every game shares (join, waiting, phone lobby, queue, reconnecting, the game picker); shared `style.css`. Build the real screens to match them |
 | `lib/`, `test/`, ... | The Phoenix project (platform + UNO), hand-written without `mix phx.new`; layout in `docs/uno/design.md` §3 |
 | `.superpowers/sdd/plan/` | The implementing session's ledger (`progress.md`: rulings, deferred items) and code reviews |
 
@@ -39,7 +42,7 @@ see "Where things live".
 | Game | Status | What it is | Docs |
 |---|---|---|---|
 | UNO | First game, in design | The card game. Phone: your hand. Table: discard pile, whose turn, every player's card count. | `docs/uno/` |
-| Liar's Dice | Planned, not designed yet | Bluffing dice game. Phone: your dice. Table: the current bid, each player's dice count, the reveal. | none yet |
+| Liar's Dice | Second game, spec written | Bluffing dice game, played free-form (bids are out loud). Phone: your dice, with a rolling animation. Table: each player's dice count, the total, Roll, a face picker that lights up matching dice on every phone, and "take a die". | `docs/liars-dice/` |
 | Quiplash | Planned, not designed yet | Everyone answers a prompt with something funny on their phone, then everyone votes. Table: answers side by side, scores. | none yet |
 | Paranoia | Planned, not designed yet | One player privately sends a question about the group ("Who here would…?") to another player's phone. That player says a name out loud; a coin flip decides if the table reveals the question. | none yet |
 | Who wrote it? | Planned, not designed yet | The table asks a personal question; everyone answers anonymously on their phone. The table shows the answers one by one and everyone votes on who wrote each. Points for guessing right and for fooling others. | none yet |
@@ -186,11 +189,17 @@ None right now.
 | A kicked player's join screen fills in their old name | User's choice (2026-10-12): matches the mockup; one tap to rejoin |
 | Fonts load from Google Fonts; offline, pages fall back to the system font | User's choice (2026-10-12): most party Wi-Fi has internet; the game works either way |
 | Planned games after UNO: Liar's Dice, Quiplash, Paranoia, Who wrote it?, Love Letter, Never Have I Ever, Killer | User's choice. Liar's Dice is a small build that fits the kick and last-player-wins rules; Quiplash has no turns, so the shared lobby code won't assume turn-based play; Paranoia, Who wrote it?, Never Have I Ever and Killer are about the people in the room; Love Letter is a tiny card game |
+| Liar's Dice is free-form: the server rolls, counts dice, and decides who's out and who won; bids, turns and "Liar!" happen out loud | User's choice (2026-10-12): as close to playing by hand as possible |
+| Liar's Dice: the table's Roll button rolls every phone at once, with a 3D rolling animation | User's choice (2026-10-12): one tap, nobody can secretly re-roll; the animation makes it fun |
+| Liar's Dice count: players show their phones; the table picks the bid's face (2–6), and matching dice and 1s light up on every phone; the table never shows the number | User's choice (2026-10-12): quicker counting that keeps the suspense |
+| Liar's Dice: 1s are wild | User's choice (2026-10-12): the classic rule; why the face picker goes 2 to 6 |
+| Liar's Dice: the table takes one die from whoever lost the challenge (confirm panel, no undo); 0 dice = out; last player with dice wins | User's rule (2026-10-12); the panel is the confirm step, like UNO's "draw for player" |
+| A second game → the Room hands moves to the picked game through a small shared interface (`LanParty.Game`) | Planned in the UNO spec for when a second game arrives; details in `docs/liars-dice/design.md` §3 |
 
 ## Working agreements for future sessions
 
 - Don't build anything the user hasn't agreed to. Ask when a choice belongs to the user.
 - Prefer the simplest thing that works at a real party: one command to start, one URL to join.
-- UNO is built first; the other games in "Games" are planned, not designed. Keep game logic separate
-  from lobby/room logic so a second game can be added later, but don't build a generic game framework
-  until there is a second game.
+- UNO is built and Liar's Dice is designed; the other games in "Games" are planned, not designed. Keep
+  game logic separate from lobby/room logic. Games share only the small `LanParty.Game` interface
+  (`docs/liars-dice/design.md` §3); don't grow it into a generic framework until a game needs more.
