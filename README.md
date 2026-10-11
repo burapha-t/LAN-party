@@ -10,7 +10,7 @@ iPad is the table. Nothing to install for guests.
 
 ## Every party
 
-1. Connect this computer to the party Wi-Fi.
+1. Connect this computer to the party network: its Wi-Fi, or a cable to the same router.
 2. Run `mix phx.server`.
 3. The first time, Windows asks whether to let `erl.exe` through the firewall: allow **Private
    networks**.
@@ -18,8 +18,12 @@ iPad is the table. Nothing to install for guests.
    - `Players: http://<ip>:4000/` — tell your guests.
    - `Table:   http://<ip>:4000/table` — open it on the TV or iPad, then pick a game.
 
-   If several lines are printed, use the one labelled with your Wi-Fi adapter.
-5. Stop with Ctrl+C twice.
+   If several addresses are printed, use the one labelled with the adapter that connects this
+   computer to the party network ("Wi-Fi" or "Ethernet"). Ignore VPN adapters (e.g. "NordLynx");
+   phones can't reach them.
+5. If guests' phones can't open the page while a VPN is on, turn off the VPN's setting that hides this
+   computer on the local network (NordVPN: "Invisibility on LAN"), or disconnect the VPN.
+6. Stop with Ctrl+C twice.
 
 ## For developers
 

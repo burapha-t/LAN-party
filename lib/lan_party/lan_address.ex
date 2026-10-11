@@ -14,15 +14,55 @@ defmodule LanParty.LanAddress do
   def list do
     case :inet.getifaddrs() do
       {:ok, interfaces} ->
+        names = adapter_names()
+
         for {name, opts} <- interfaces,
             {:addr, ip} <- opts,
             tuple_size(ip) == 4,
             private_ipv4?(ip),
-            do: {List.to_string(name), ip}
+            do: {friendly_name(List.to_string(name), names), ip}
 
       {:error, _} ->
         []
     end
+  end
+
+  @doc """
+  On Windows, `:inet.getifaddrs/0` names adapters `\\DEVICE\\TCPIP_{GUID}`. Returns the adapter's
+  name (e.g. "Ethernet") when its GUID is in `names`, otherwise the name unchanged.
+  """
+  def friendly_name(name, names) do
+    case Regex.run(~r/\{[0-9A-Fa-f-]+\}/, name) do
+      [guid] -> Map.get(names, String.upcase(guid), name)
+      nil -> name
+    end
+  end
+
+  @doc "Parses lines of `{GUID}|Name` (from `Get-NetAdapter`) into a map keyed by the upper-case GUID."
+  def parse_adapters(output) do
+    for line <- String.split(output, ["\r\n", "\n"], trim: true),
+        [guid, name] <- [String.split(line, "|", parts: 2)],
+        into: %{},
+        do: {String.upcase(String.trim(guid)), String.trim(name)}
+  end
+
+  # Windows only: GUID => adapter name. Empty if PowerShell is missing or fails.
+  defp adapter_names do
+    with {:win32, _} <- :os.type(),
+         {output, 0} <-
+           System.cmd("powershell", [
+             "-NoProfile",
+             "-NonInteractive",
+             "-Command",
+             "[Console]::OutputEncoding = [Text.Encoding]::UTF8; " <>
+               "Get-NetAdapter | ForEach-Object { $_.InterfaceGuid + '|' + $_.Name }"
+           ]) do
+      parse_adapters(output)
+    else
+      _ -> %{}
+    end
+  rescue
+    _ -> %{}
   end
 
   def banner([], _port) do

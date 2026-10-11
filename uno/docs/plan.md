@@ -148,6 +148,28 @@ defmodule LanParty.LanAddressTest do
       assert LanAddress.private_ipv4?(ip)
     end
   end
+
+  test "parses Windows adapter names keyed by GUID" do
+    output = "{FC01FCD5-2B9D-2FD8-78D8-CB78B313E2B2}|NordLynx\r\n{2fe31bf7-b21b-4651-9a26-26f86691a1e4}|Ethernet\r\n\r\n"
+
+    assert LanAddress.parse_adapters(output) == %{
+             "{FC01FCD5-2B9D-2FD8-78D8-CB78B313E2B2}" => "NordLynx",
+             "{2FE31BF7-B21B-4651-9A26-26F86691A1E4}" => "Ethernet"
+           }
+  end
+
+  test "Windows device names show as adapter names" do
+    names = %{"{2FE31BF7-B21B-4651-9A26-26F86691A1E4}" => "Ethernet"}
+
+    assert LanAddress.friendly_name(~S"\DEVICE\TCPIP_{2FE31BF7-B21B-4651-9A26-26F86691A1E4}", names) ==
+             "Ethernet"
+
+    # Unknown GUIDs and non-Windows names stay as they are.
+    assert LanAddress.friendly_name(~S"\DEVICE\TCPIP_{00000000-0000-0000-0000-000000000000}", names) ==
+             ~S"\DEVICE\TCPIP_{00000000-0000-0000-0000-000000000000}"
+
+    assert LanAddress.friendly_name("en0", names) == "en0"
+  end
 end
 ```
 
@@ -177,15 +199,55 @@ defmodule LanParty.LanAddress do
   def list do
     case :inet.getifaddrs() do
       {:ok, interfaces} ->
+        names = adapter_names()
+
         for {name, opts} <- interfaces,
             {:addr, ip} <- opts,
             tuple_size(ip) == 4,
             private_ipv4?(ip),
-            do: {List.to_string(name), ip}
+            do: {friendly_name(List.to_string(name), names), ip}
 
       {:error, _} ->
         []
     end
+  end
+
+  @doc """
+  On Windows, `:inet.getifaddrs/0` names adapters `\\DEVICE\\TCPIP_{GUID}`. Returns the adapter's
+  name (e.g. "Ethernet") when its GUID is in `names`, otherwise the name unchanged.
+  """
+  def friendly_name(name, names) do
+    case Regex.run(~r/\{[0-9A-Fa-f-]+\}/, name) do
+      [guid] -> Map.get(names, String.upcase(guid), name)
+      nil -> name
+    end
+  end
+
+  @doc "Parses lines of `{GUID}|Name` (from `Get-NetAdapter`) into a map keyed by the upper-case GUID."
+  def parse_adapters(output) do
+    for line <- String.split(output, ["\r\n", "\n"], trim: true),
+        [guid, name] <- [String.split(line, "|", parts: 2)],
+        into: %{},
+        do: {String.upcase(String.trim(guid)), String.trim(name)}
+  end
+
+  # Windows only: GUID => adapter name. Empty if PowerShell is missing or fails.
+  defp adapter_names do
+    with {:win32, _} <- :os.type(),
+         {output, 0} <-
+           System.cmd("powershell", [
+             "-NoProfile",
+             "-NonInteractive",
+             "-Command",
+             "[Console]::OutputEncoding = [Text.Encoding]::UTF8; " <>
+               "Get-NetAdapter | ForEach-Object { $_.InterfaceGuid + '|' + $_.Name }"
+           ]) do
+      parse_adapters(output)
+    else
+      _ -> %{}
+    end
+  rescue
+    _ -> %{}
   end
 
   def banner([], _port) do
@@ -209,7 +271,7 @@ end
 - [ ] **Step 8: Run the test to see it pass**
 
 Run: `mix test test/lan_party/lan_address_test.exs`
-Expected: 4 tests, 0 failures.
+Expected: 6 tests, 0 failures.
 
 - [ ] **Step 9: Bind to the LAN, add config keys, print the banner on boot**
 
@@ -4334,7 +4396,7 @@ iPad is the table. Nothing to install for guests.
 
 ## Every party
 
-1. Connect this computer to the party Wi-Fi.
+1. Connect this computer to the party network: its Wi-Fi, or a cable to the same router.
 2. Run `mix phx.server`.
 3. The first time, Windows asks whether to let `erl.exe` through the firewall: allow **Private
    networks**.
@@ -4342,8 +4404,12 @@ iPad is the table. Nothing to install for guests.
    - `Players: http://<ip>:4000/` — tell your guests.
    - `Table:   http://<ip>:4000/table` — open it on the TV or iPad, then pick a game.
 
-   If several lines are printed, use the one labelled with your Wi-Fi adapter.
-5. Stop with Ctrl+C twice.
+   If several addresses are printed, use the one labelled with the adapter that connects this
+   computer to the party network ("Wi-Fi" or "Ethernet"). Ignore VPN adapters (e.g. "NordLynx");
+   phones can't reach them.
+5. If guests' phones can't open the page while a VPN is on, turn off the VPN's setting that hides this
+   computer on the local network (NordVPN: "Invisibility on LAN"), or disconnect the VPN.
+6. Stop with Ctrl+C twice.
 
 ## For developers
 

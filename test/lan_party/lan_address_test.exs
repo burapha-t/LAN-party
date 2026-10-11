@@ -32,4 +32,26 @@ defmodule LanParty.LanAddressTest do
       assert LanAddress.private_ipv4?(ip)
     end
   end
+
+  test "parses Windows adapter names keyed by GUID" do
+    output = "{FC01FCD5-2B9D-2FD8-78D8-CB78B313E2B2}|NordLynx\r\n{2fe31bf7-b21b-4651-9a26-26f86691a1e4}|Ethernet\r\n\r\n"
+
+    assert LanAddress.parse_adapters(output) == %{
+             "{FC01FCD5-2B9D-2FD8-78D8-CB78B313E2B2}" => "NordLynx",
+             "{2FE31BF7-B21B-4651-9A26-26F86691A1E4}" => "Ethernet"
+           }
+  end
+
+  test "Windows device names show as adapter names" do
+    names = %{"{2FE31BF7-B21B-4651-9A26-26F86691A1E4}" => "Ethernet"}
+
+    assert LanAddress.friendly_name(~S"\DEVICE\TCPIP_{2FE31BF7-B21B-4651-9A26-26F86691A1E4}", names) ==
+             "Ethernet"
+
+    # Unknown GUIDs and non-Windows names stay as they are.
+    assert LanAddress.friendly_name(~S"\DEVICE\TCPIP_{00000000-0000-0000-0000-000000000000}", names) ==
+             ~S"\DEVICE\TCPIP_{00000000-0000-0000-0000-000000000000}"
+
+    assert LanAddress.friendly_name("en0", names) == "en0"
+  end
 end
