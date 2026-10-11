@@ -1,5 +1,5 @@
 defmodule LanPartyWeb.Uno.Components do
-  @moduledoc "UNO pieces shared by the phone and table screens. Markup copied from mockups/."
+  @moduledoc "UNO pieces shared by the phone and table screens. Markup copied from docs/mockups/."
   use Phoenix.Component
 
   alias LanParty.Uno.Card

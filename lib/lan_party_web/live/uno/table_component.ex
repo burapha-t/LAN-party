@@ -2,7 +2,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
   @moduledoc """
   UNO on the table: the lobby (house rules, Start, Change game), the round (seats, pile, draw for
   player, Reset), and the result. Rendered by `TableLive` once UNO is picked.
-  Markup follows mockups/table/.
+  Markup follows docs/mockups/table/.
   """
   use LanPartyWeb, :live_component
 

@@ -2,7 +2,7 @@ defmodule LanParty.Uno.View do
   @moduledoc """
   What each screen may see of a game: a phone gets only its own hand, the table gets counts.
   The phone never draws the pile; `top` and `color` are there to word error messages.
-  See uno/docs/design.md §6 "Views".
+  See docs/uno/design.md §6 "Views".
   """
 
   alias LanParty.Uno.{Card, Rules}

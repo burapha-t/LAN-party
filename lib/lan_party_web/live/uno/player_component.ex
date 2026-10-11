@@ -1,8 +1,8 @@
 defmodule LanPartyWeb.Uno.PlayerComponent do
   @moduledoc """
   UNO on a phone: lobby, queue, the round, prompts, and the result. Rendered by `PlayerLive` once the
-  table picks UNO. Never shows the pile or the current color (uno/docs/README.md "Views").
-  Markup follows mockups/phone/.
+  table picks UNO. Never shows the pile or the current color (docs/uno/README.md "Views").
+  Markup follows docs/mockups/phone/.
   """
   use LanPartyWeb, :live_component
 

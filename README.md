@@ -28,4 +28,4 @@ iPad is the table. Nothing to install for guests.
 ## For developers
 
 - `mix test` runs everything.
-- Read `CLAUDE.md` first; UNO's rules and design are in `uno/docs/`; the screens follow `mockups/`.
+- Read `CLAUDE.md` first; UNO's rules and design are in `docs/uno/`; the screens follow `docs/mockups/`.

@@ -3,7 +3,7 @@ defmodule LanParty.Room do
   The platform state for the night: who has joined, the game the table picked, seats, queue, house
   rules, phases, disconnects and kicks. Knows nothing about cards: UNO actions go to
   `LanParty.Uno.Rules`. Calls are handled one at a time in arrival order, which is what makes
-  "first jump-in wins" automatic. See uno/docs/design.md §4–5.
+  "first jump-in wins" automatic. See docs/uno/design.md §4–5.
   """
   use GenServer
 

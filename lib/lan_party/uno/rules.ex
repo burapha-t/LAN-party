@@ -1,7 +1,7 @@
 defmodule LanParty.Uno.Rules do
   @moduledoc """
   Every UNO rule, as pure functions over a game struct. No processes, no timers.
-  The rules are in uno/docs/README.md; how they map to code is in uno/docs/design.md §6.
+  The rules are in docs/uno/README.md; how they map to code is in docs/uno/design.md §6.
   """
 
   alias LanParty.Uno.{Card, Deck}

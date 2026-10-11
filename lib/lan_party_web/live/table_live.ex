@@ -2,7 +2,7 @@ defmodule LanPartyWeb.TableLive do
   @moduledoc """
   The table at `/table`: "Select the game", then that game's table screens. Any number of table
   devices can be open; all show the same thing and all can use the controls.
-  Markup follows mockups/table/.
+  Markup follows docs/mockups/table/.
   """
   use LanPartyWeb, :live_view
 

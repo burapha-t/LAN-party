@@ -4,8 +4,8 @@
 - **Status:** Approved 2026-10-12. Revised and re-approved the same day for the game picker (one player
   URL for the night; the table picks the game) and the Reset confirmation. No code until the
   implementation plan is approved.
-- **Mockups:** `mockups/` (static HTML) shows every screen in §2. Build the screens to match them.
-- **Inputs:** `CLAUDE.md` (platform) and `uno/docs/README.md` (UNO rules and product decisions). Both are
+- **Mockups:** `docs/mockups/` (static HTML) shows every screen in §2. Build the screens to match them.
+- **Inputs:** `CLAUDE.md` (platform) and `docs/uno/README.md` (UNO rules and product decisions). Both are
   part of this spec by reference. This file doesn't repeat the rules; it says how the product behaves
   and how it's built.
 
@@ -15,7 +15,7 @@ Build the LAN Party server with UNO as its only game, meeting the success criter
 one command to start, phones join with nothing installed, a full round can be played to a winner with
 a TV or iPad as the table, a sleeping phone keeps its seat, and every rule is enforced by the server.
 
-**In scope:** the rules in `uno/docs/README.md`, the phone view, the table view, joining once per night,
+**In scope:** the rules in `docs/uno/README.md`, the phone view, the table view, joining once per night,
 the game picker (UNO is the only playable game), the queue, disconnects and kicks, and the startup log.
 
 **Out of scope:** animations, sounds, drag-and-drop, an "UNO" button, chat, scores across rounds,
@@ -138,7 +138,7 @@ lib/lan_party_web/live/uno/table_component.ex   # UNO table screens
 test/lan_party/uno/*_test.exs
 test/lan_party/room_test.exs
 test/lan_party_web/live/*_test.exs
-uno/docs/                                # stays where it is
+docs/                                    # docs/uno/ (rules, this spec, plan) and docs/mockups/
 ```
 
 ## 4. Identity, reconnect, kicks

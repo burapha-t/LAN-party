@@ -1,7 +1,7 @@
 defmodule LanPartyWeb.PlayerLive do
   @moduledoc """
   The phone at `/`: join once per night, wait for the table to pick a game, then that game's phone
-  screens. See uno/docs/design.md §2 and §4. Markup follows mockups/phone/.
+  screens. See docs/uno/design.md §2 and §4. Markup follows docs/mockups/phone/.
   """
   use LanPartyWeb, :live_view
 

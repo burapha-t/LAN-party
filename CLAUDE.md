@@ -6,12 +6,12 @@ see "Where things live".
 
 ## Status
 
-- **Stage:** First build compiles and `mix test` passes (145 tests, 2026-10-12). Not yet tried on real
+- **Stage:** First build compiles and `mix test` passes (147 tests, 2026-10-12). Not yet tried on real
   devices. Still to do: run `mix phx.server` and open it from a phone, compare the screens with
-  `mockups/` in a browser, and the party test (`uno/docs/plan.md` Task 13 Step 4).
+  `docs/mockups/` in a browser, and the party test (`docs/uno/plan.md` Task 13 Step 4).
 - **Process:** context → clarifying questions (done) → approaches (done) → design (done) → written spec
-  (`uno/docs/design.md`, approved 2026-10-12, including the game-picker revision) → implementation plan
-  (`uno/docs/plan.md`; the user hasn't reviewed it, but asked another session to implement it) → code
+  (`docs/uno/design.md`, approved 2026-10-12, including the game-picker revision) → implementation plan
+  (`docs/uno/plan.md`; the user hasn't reviewed it, but asked another session to implement it) → code
   (written 2026-10-12 by subagents; the plan was updated to match the code review's fixes; compiled and
   tested once Elixir 1.20.4 / OTP 29 was installed).
 - Keep this file updated: when an open question is answered, move it to "Decisions" with a one-line reason.
@@ -21,23 +21,24 @@ see "Where things live".
 | Path | What |
 |---|---|
 | `CLAUDE.md` | Platform-level context (this file) |
-| `uno/docs/` | Everything about the UNO game. **Read `uno/docs/README.md` before working on UNO.** |
-| `uno/docs/design.md` | Design spec for the first build (platform + UNO): screens, architecture, rules engine, tests |
-| `uno/docs/plan.md` | Implementation plan for the first build: 13 tasks, test-first |
-| `mockups/` | Static HTML mockups of every phone and table screen (`phone/`, `table/`, shared `style.css`). Build the real screens to match them |
-| `lib/`, `test/`, ... | The Phoenix project (platform + UNO), hand-written without `mix phx.new`; layout in `uno/docs/design.md` §3 |
+| `docs/` | All docs: one folder per game (`docs/<game>/`) plus `docs/mockups/` |
+| `docs/uno/` | Everything about the UNO game. **Read `docs/uno/README.md` before working on UNO.** |
+| `docs/uno/design.md` | Design spec for the first build (platform + UNO): screens, architecture, rules engine, tests |
+| `docs/uno/plan.md` | Implementation plan for the first build: 13 tasks, test-first |
+| `docs/mockups/` | Static HTML mockups of every phone and table screen (`phone/`, `table/`, shared `style.css`). Build the real screens to match them |
+| `lib/`, `test/`, ... | The Phoenix project (platform + UNO), hand-written without `mix phx.new`; layout in `docs/uno/design.md` §3 |
 | `.superpowers/sdd/plan/` | The implementing session's ledger (`progress.md`: rulings, deferred items) and code reviews |
 
 - Two URLs for the whole night: players open `/` (e.g. `http://<lan-ip>:<port>/`), middle devices open
   `/table`. Games don't have their own URLs; the table picks the game and every phone follows.
-- Each game's docs live in `<game>/docs/`. Its code lives in the Phoenix project under
+- Each game's docs live in `docs/<game>/`. Its code lives in the Phoenix project under
   `lib/lan_party/<game>/` and `lib/lan_party_web/live/<game>/`.
 
 ## Games
 
 | Game | Status | What it is | Docs |
 |---|---|---|---|
-| UNO | First game, in design | The card game. Phone: your hand. Table: discard pile, whose turn, every player's card count. | `uno/docs/` |
+| UNO | First game, in design | The card game. Phone: your hand. Table: discard pile, whose turn, every player's card count. | `docs/uno/` |
 | Liar's Dice | Planned, not designed yet | Bluffing dice game. Phone: your dice. Table: the current bid, each player's dice count, the reveal. | none yet |
 | Quiplash | Planned, not designed yet | Everyone answers a prompt with something funny on their phone, then everyone votes. Table: answers side by side, scores. | none yet |
 | Paranoia | Planned, not designed yet | One player privately sends a question about the group ("Who here would…?") to another player's phone. That player says a name out loud; a coin flip decides if the table reveals the question. | none yet |
@@ -67,7 +68,7 @@ Replace the physical game kit with a web game hosted on the host's own computer,
 - 2–8 players join from their phone browsers on the same Wi-Fi with nothing to install.
 - A full UNO round can be played to a winner, with a TV or iPad as the table and no physical cards.
 - A phone that briefly locks or switches apps (shorter than the grace period) keeps its seat and hand.
-- Every UNO rule in `uno/docs/README.md` is enforced by the server. An illegal play is rejected, and the
+- Every UNO rule in `docs/uno/README.md` is enforced by the server. An illegal play is rejected, and the
   phone shows why.
 
 ## Platform design
@@ -168,8 +169,8 @@ None right now.
 | Disconnect → ~30 s grace period → kick; a kicked player's cards and turn leave the game | Phones sleep between turns; removing the player is the simplest way to handle a kick |
 | Last player left wins | Simplest end condition when others drop |
 | LAN address is printed in the server log only | Host shares it with players; simplest |
-| Each game's docs go in `<game>/docs/` | User's choice; keeps games separate. (Per-game URL paths were replaced by the game picker, below.) |
-| First game: UNO (details in `uno/docs/`) | User's choice |
+| Each game's docs go in `docs/<game>/`; the screen mockups in `docs/mockups/` | User's choice; keeps games separate, all docs in one folder (moved from `<game>/docs/` and `mockups/`, 2026-10-12). (Per-game URL paths were replaced by the game picker, below.) |
+| First game: UNO (details in `docs/uno/`) | User's choice |
 | Stack: Elixir + Phoenix LiveView, no database | Real-time views and disconnect detection built in; user wants to learn something new |
 | Success criteria confirmed, plus "server enforces every UNO rule" | Confirmed by the user 2026-10-12 |
 | Role by URL: `/` for players, `/table` for middle devices (replaces `/<game>` and `/<game>/table`, 2026-10-12) | One player URL for the whole night; guests can't become the table by accident |
@@ -178,8 +179,8 @@ None right now.
 | Change game only from a game's lobby; picking a game seats everyone in arrival order up to its limit | No round is cut off by switching; works like "Play again" |
 | Players join with a name, unique among current players | Needed to tell players apart on the table and in prompts (e.g. 7-0 swap) |
 | Game end or reset → everyone, including the queue, back to the lobby | One simple point where late joiners get in |
-| Architecture: pure rules module per game + one Room process for the platform state | Standard Elixir shape; one process gives arrival-order handling for free; rules testable without a browser. Details in `uno/docs/design.md` |
-| Code layout: standard Phoenix project at the repo root; game docs stay in `<game>/docs/` | Matches Phoenix guides, which helps while learning the stack |
+| Architecture: pure rules module per game + one Room process for the platform state | Standard Elixir shape; one process gives arrival-order handling for free; rules testable without a browser. Details in `docs/uno/design.md` |
+| Code layout: standard Phoenix project at the repo root; docs live in `docs/` | Matches Phoenix guides, which helps while learning the stack |
 | More than 8 people: seats in arrival order; seated players keep their seats at "Play again" | Simplest; revisit if parties regularly exceed 8 |
 | A seat freed in the lobby goes to the first person in the queue at once | User's choice (2026-10-12): don't make them wait an extra round |
 | A kicked player's join screen fills in their old name | User's choice (2026-10-12): matches the mockup; one tap to rejoin |

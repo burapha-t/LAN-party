@@ -11,23 +11,23 @@ kicks. Two LiveViews (`PlayerLive` at `/`, `TableLive` at `/table`) call the Roo
 PubSub broadcasts; once UNO is picked they render UNO LiveComponents for the UNO screens.
 
 **Tech Stack:** Elixir ≥ 1.15, Erlang/OTP ≥ 26, Phoenix 1.8 (whatever `phx_new` installs), Phoenix
-LiveView ≥ 1.0. Styling is the plain CSS of `mockups/style.css`, copied into `assets/css/app.css`
+LiveView ≥ 1.0. Styling is the plain CSS of `docs/mockups/style.css`, copied into `assets/css/app.css`
 (the generated asset pipeline still builds it). No database, no custom JavaScript.
 
-**Spec:** `uno/docs/design.md`. Rules: `uno/docs/README.md`. Platform: `CLAUDE.md`. Read all three.
+**Spec:** `docs/uno/design.md`. Rules: `docs/uno/README.md`. Platform: `CLAUDE.md`. Read all three.
 
 ## Global Constraints
 
 - **No git commits.** The user commits. Skip any "commit" habit; leave changes in the working tree.
 - App name `lan_party`; modules `LanParty.*` (core) and `LanPartyWeb.*` (web). Phoenix project at the
-  repo root. `uno/docs/` and `CLAUDE.md` stay where they are.
+  repo root. `docs/` and `CLAUDE.md` stay where they are.
 - No Ecto, no mailer, no JS hooks.
 - Server binds `{0, 0, 0, 0}`, port 4000. Start command: `mix phx.server`.
 - Grace period: config `:lan_party, :grace_ms`, default `30_000` (tests: `50`).
 - Max 8 seats. Names are trimmed, 1–20 characters, unique ignoring case.
 - Draw for player: amount 1–10, default 2. It never changes the turn or the jump-in window.
 - All house rules off by default: `%{stack_plus2: false, stack_plus4: false, seven_zero: false, jump_in: false}`.
-- **Screens match `mockups/`** (static HTML + `mockups/style.css`). The app uses that stylesheet as
+- **Screens match `docs/mockups/`** (static HTML + `docs/mockups/style.css`). The app uses that stylesheet as
   is, and every screen reuses the mockup's markup and class names. Copy text comes from the mockups.
   The mockups were still being edited while this plan was written: when a UI task's markup differs
   from the current mockup file it names, the mockup wins for markup and copy; this plan wins for
@@ -61,7 +61,7 @@ LiveView ≥ 1.0. Styling is the plain CSS of `mockups/style.css`, copied into `
 | `lib/lan_party/room.ex` | Platform state GenServer for the night: people, picked game, seats, queue, settings, phases, grace, kicks |
 | `lib/lan_party_web/plugs/player_token.ex` | Gives each browser a player token in the session |
 | `lib/lan_party_web/components/layouts/root.html.heex` | Root layout: fonts, stylesheet, SVG sprite |
-| `assets/css/app.css` | A copy of `mockups/style.css` |
+| `assets/css/app.css` | A copy of `docs/mockups/style.css` |
 | `lib/lan_party_web/live/player_live.ex` | `/`: join, waiting for a game, reconnect overlay; hosts the game component |
 | `lib/lan_party_web/live/table_live.ex` | `/table`: "Select the game"; hosts the game component |
 | `lib/lan_party_web/live/uno/components.ex` | Shared UNO function components: card face, toast |
@@ -102,7 +102,7 @@ From `D:\project\LAN-party`:
 
 Run: `mix phx.new . --app lan_party --module LanParty --no-ecto --no-mailer`
 Answer `Y` to "directory already exists, continue?" and `Y` to "Fetch and install dependencies?".
-If it asks to overwrite an existing file (`CLAUDE.md`, anything in `uno/`), answer `n`.
+If it asks to overwrite an existing file (`CLAUDE.md`, anything in `docs/`), answer `n`.
 
 - [ ] **Step 4: Check the generated project works**
 
@@ -780,7 +780,7 @@ Create `lib/lan_party/uno/rules.ex`:
 defmodule LanParty.Uno.Rules do
   @moduledoc """
   Every UNO rule, as pure functions over a game struct. No processes, no timers.
-  The rules are in uno/docs/README.md; how they map to code is in uno/docs/design.md §6.
+  The rules are in docs/uno/README.md; how they map to code is in docs/uno/design.md §6.
   """
 
   alias LanParty.Uno.{Card, Deck}
@@ -901,7 +901,7 @@ defmodule LanParty.Uno.View do
   @moduledoc """
   What each screen may see of a game: a phone gets only its own hand, the table gets counts.
   The phone never draws the pile; `top` and `color` are there to word error messages.
-  See uno/docs/design.md §6 "Views".
+  See docs/uno/design.md §6 "Views".
   """
 
   alias LanParty.Uno.{Card, Rules}
@@ -2224,7 +2224,7 @@ defmodule LanParty.Room do
   The platform state for the night: who has joined, the game the table picked, seats, queue, house
   rules, phases, disconnects and kicks. Knows nothing about cards: UNO actions go to
   `LanParty.Uno.Rules`. Calls are handled one at a time in arrival order, which is what makes
-  "first jump-in wins" automatic. See uno/docs/design.md §4–5.
+  "first jump-in wins" automatic. See docs/uno/design.md §4–5.
   """
   use GenServer
 
@@ -2683,7 +2683,7 @@ Expected: all tests pass.
 ### Task 10: Web shell — the mockup styles, player identity, joining, and "Select the game"
 
 **Files:**
-- Replace: `assets/css/app.css` (with a copy of `mockups/style.css`),
+- Replace: `assets/css/app.css` (with a copy of `docs/mockups/style.css`),
   `lib/lan_party_web/components/layouts/root.html.heex`
 - Modify: `lib/lan_party_web/endpoint.ex`, `lib/lan_party_web/router.ex`
 - Delete: `lib/lan_party_web/controllers/page_controller.ex`, `lib/lan_party_web/controllers/page_html.ex`,
@@ -2708,10 +2708,10 @@ Expected: all tests pass.
 
 - [ ] **Step 1: Use the mockup stylesheet and fonts**
 
-Copy `mockups/style.css` over `assets/css/app.css` (replace the whole file, including the generated
+Copy `docs/mockups/style.css` over `assets/css/app.css` (replace the whole file, including the generated
 Tailwind/daisyUI lines; the app uses only the mockup CSS):
 
-Run (PowerShell): `Copy-Item mockups/style.css assets/css/app.css -Force`
+Run (PowerShell): `Copy-Item docs/mockups/style.css assets/css/app.css -Force`
 
 Replace `lib/lan_party_web/components/layouts/root.html.heex` with the following. Keep the two
 generated asset tags exactly as your generator wrote them if the paths differ (Phoenix 1.7 uses
@@ -2983,11 +2983,11 @@ Expected: FAIL. `/` is still the generated page and `/table` doesn't exist, so `
 - [ ] **Step 6: Implement the shared card components**
 
 Create `lib/lan_party_web/live/uno/components.ex`. The markup is the mockups' card markup
-(`mockups/phone/turn-mine.html`), one face per kind of card:
+(`docs/mockups/phone/turn-mine.html`), one face per kind of card:
 
 ```elixir
 defmodule LanPartyWeb.Uno.Components do
-  @moduledoc "UNO pieces shared by the phone and table screens. Markup copied from mockups/."
+  @moduledoc "UNO pieces shared by the phone and table screens. Markup copied from docs/mockups/."
   use Phoenix.Component
 
   alias LanParty.Uno.Card
@@ -3067,14 +3067,14 @@ end
 
 - [ ] **Step 7: Implement `PlayerLive`**
 
-Create `lib/lan_party_web/live/player_live.ex` (markup from `mockups/phone/index.html`,
+Create `lib/lan_party_web/live/player_live.ex` (markup from `docs/mockups/phone/index.html`,
 `join-taken.html`, `join-kicked.html`, `waiting-game.html`, `reconnecting.html`):
 
 ```elixir
 defmodule LanPartyWeb.PlayerLive do
   @moduledoc """
   The phone at `/`: join once per night, wait for the table to pick a game, then that game's phone
-  screens. See uno/docs/design.md §2 and §4. Markup follows mockups/phone/.
+  screens. See docs/uno/design.md §2 and §4. Markup follows docs/mockups/phone/.
   """
   use LanPartyWeb, :live_view
 
@@ -3188,7 +3188,7 @@ end
 
 - [ ] **Step 8: Implement `TableLive` with "Select the game"**
 
-Create `lib/lan_party_web/live/table_live.ex` (markup from `mockups/table/index.html`; the spine colors
+Create `lib/lan_party_web/live/table_live.ex` (markup from `docs/mockups/table/index.html`; the spine colors
 and sizes are copied from it):
 
 ```elixir
@@ -3196,7 +3196,7 @@ defmodule LanPartyWeb.TableLive do
   @moduledoc """
   The table at `/table`: "Select the game", then that game's table screens. Any number of table
   devices can be open; all show the same thing and all can use the controls.
-  Markup follows mockups/table/.
+  Markup follows docs/mockups/table/.
   """
   use LanPartyWeb, :live_view
 
@@ -3309,7 +3309,7 @@ Expected: all pass.
 - [ ] **Step 10: Compare against the mockups in a browser**
 
 Run: `mix phx.server`, open `http://localhost:4000/` and `http://localhost:4000/table` next to
-`mockups/phone/index.html`, `mockups/phone/waiting-game.html` and `mockups/table/index.html` (open the
+`docs/mockups/phone/index.html`, `docs/mockups/phone/waiting-game.html` and `docs/mockups/table/index.html` (open the
 mockup files directly in the browser). Use the browser's phone emulation for `/`. They should look the
 same apart from names. If the mockup files changed since this plan was written, align the markup and
 copy with them now.
@@ -3538,8 +3538,8 @@ Create `lib/lan_party_web/live/uno/player_component.ex`:
 defmodule LanPartyWeb.Uno.PlayerComponent do
   @moduledoc """
   UNO on a phone: lobby, queue, the round, prompts, and the result. Rendered by `PlayerLive` once the
-  table picks UNO. Never shows the pile or the current color (uno/docs/README.md "Views").
-  Markup follows mockups/phone/.
+  table picks UNO. Never shows the pile or the current color (docs/uno/README.md "Views").
+  Markup follows docs/mockups/phone/.
   """
   use LanPartyWeb, :live_component
 
@@ -3917,7 +3917,7 @@ a mockup changed since this plan was written, align markup and copy with it.
 - Produces: `LanPartyWeb.Uno.TableComponent` (LiveComponent, id `"uno-table"`, assign `room`) and
   `TableComponent.main_class/1 :: String.t()` for the table's `<main>`.
 
-Screens and copy come from `mockups/table/uno-lobby.html`, `uno-lobby-waiting.html`,
+Screens and copy come from `docs/mockups/table/uno-lobby.html`, `uno-lobby-waiting.html`,
 `uno-playing.html`, `uno-draw-for-*.html`, `uno-reset.html`, `uno-finished.html`.
 
 - [ ] **Step 1: Write the failing tests**
@@ -4049,7 +4049,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
   @moduledoc """
   UNO on the table: the lobby (house rules, Start, Change game), the round (seats, pile, draw for
   player, Reset), and the result. Rendered by `TableLive` once UNO is picked.
-  Markup follows mockups/table/.
+  Markup follows docs/mockups/table/.
   """
   use LanPartyWeb, :live_component
 
@@ -4329,9 +4329,9 @@ defmodule LanPartyWeb.Uno.TableComponent do
 end
 ```
 
-Rows of 4 (7–8 players) get the `four` class. Its rule lives in `mockups/style.css`
+Rows of 4 (7–8 players) get the `four` class. Its rule lives in `docs/mockups/style.css`
 (`@media (min-width: 761px) { .seats.four { … } }`), so `assets/css/app.css` must be a fresh copy of
-it: run `Copy-Item mockups/style.css assets/css/app.css -Force` again if your copy predates that rule.
+it: run `Copy-Item docs/mockups/style.css assets/css/app.css -Force` again if your copy predates that rule.
 
 - [ ] **Step 4: Render it from `TableLive`**
 
@@ -4414,7 +4414,7 @@ iPad is the table. Nothing to install for guests.
 ## For developers
 
 - `mix test` runs everything.
-- Read `CLAUDE.md` first; UNO's rules and design are in `uno/docs/`; the screens follow `mockups/`.
+- Read `CLAUDE.md` first; UNO's rules and design are in `docs/uno/`; the screens follow `docs/mockups/`.
 ```
 
 - [ ] **Step 2: Update `CLAUDE.md`**
