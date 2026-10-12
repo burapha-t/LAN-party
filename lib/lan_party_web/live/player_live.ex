@@ -122,6 +122,14 @@ defmodule LanPartyWeb.PlayerLive do
         token={@token}
       />
 
+      <.live_component
+        :if={@me && @room.game_id == :undercover}
+        module={LanPartyWeb.Undercover.PlayerComponent}
+        id="undercover-phone"
+        room={@room}
+        token={@token}
+      />
+
       <div
         id="reconnect"
         style="display: none"

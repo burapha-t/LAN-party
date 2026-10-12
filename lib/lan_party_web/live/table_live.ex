@@ -10,6 +10,7 @@ defmodule LanPartyWeb.TableLive do
   alias LanParty.Uno.Card
   import LanPartyWeb.Uno.Components
   alias LanPartyWeb.LiarsDice.Components, as: Dice
+  alias LanPartyWeb.Undercover.Components, as: Undercover
 
   @spines %{
     liars_dice: "--sc:#8a3340;--h:84%;--w:max(46px,5.2vw)",
@@ -135,6 +136,22 @@ defmodule LanPartyWeb.TableLive do
                 <b>Liar's Dice</b><small>2 to 8 players</small>
               </span>
             </a>
+            <a
+              class={["box-undercover", box_state(:undercover, @selected)]}
+              phx-click="select_game"
+              phx-value-id="undercover"
+              aria-label="Undercover, 3 to 8 players"
+            >
+              <span class="box-logo" aria-hidden="true">Undercover</span>
+              <span class="box-art" aria-hidden="true">
+                <Undercover.slip word="Coffee" style="--x:-14%;--y:-76%;--r:-8deg" />
+                <Undercover.slip word="Tea" style="--x:34%;--y:62%;--r:7deg" />
+              </span>
+              <span class="box-tag">3 to 8 players</span>
+              <span class="box-spine" aria-hidden="true">
+                <b>Undercover</b><small>3 to 8 players</small>
+              </span>
+            </a>
             <div :for={game <- @unbuilt} class="spine" style={@spines[game.id]}>
               <b>{game.name}</b><small>Not built yet</small>
             </div>
@@ -149,6 +166,12 @@ defmodule LanPartyWeb.TableLive do
                   <p>Bluff about hidden dice.</p>
                   <button class="btn" phx-click="pick_game" phx-value-id="liars_dice">
                     Play Liar's Dice
+                  </button>
+                <% :undercover -> %>
+                  <h2>Undercover</h2>
+                  <p>Find who has a different word.</p>
+                  <button class="btn" phx-click="pick_game" phx-value-id="undercover">
+                    Play Undercover
                   </button>
                 <% nil -> %>
                   <p>Tap a game to choose it.</p>
@@ -170,6 +193,13 @@ defmodule LanPartyWeb.TableLive do
         :if={@room.game_id == :liars_dice}
         module={LanPartyWeb.LiarsDice.TableComponent}
         id="liars-dice-table"
+        room={@room}
+      />
+
+      <.live_component
+        :if={@room.game_id == :undercover}
+        module={LanPartyWeb.Undercover.TableComponent}
+        id="undercover-table"
         room={@room}
       />
 

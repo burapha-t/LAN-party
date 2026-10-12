@@ -977,14 +977,17 @@ ul { padding: 0; list-style: none; }
 /* Table: the felt is wine red and never changes. Total on the left, the face picker
    in the middle where UNO has its top card, Roll on the right. */
 .felt-dice { --felt: #a83a4c; }
-.dice-total { justify-self: end; display: grid; justify-items: center; gap: 0.3em; text-decoration: none; }
-.dice-total b {
+.dice-total,
+.undercover-total { justify-self: end; display: grid; justify-items: center; gap: 0.3em; text-decoration: none; }
+.dice-total b,
+.undercover-total b {
   font: 800 8em/0.85 var(--display);
   -webkit-text-stroke: 0.09em var(--ink);
   paint-order: stroke fill;
   text-shadow: 0.035em 0.045em 0 var(--ink);
 }
-.dice-total span { font-size: 1.15em; font-weight: 800; }
+.dice-total span,
+.undercover-total span { font-size: 1.15em; font-weight: 800; }
 .face-pick { display: grid; justify-items: center; gap: 1.1em; text-align: center; }
 .face-pick p { max-width: 20em; font-size: 1.2em; font-weight: 800; }
 .face-pick p b { color: var(--sun); font-weight: 900; }
@@ -1003,6 +1006,53 @@ ul { padding: 0; list-style: none; }
 .face-btn[aria-pressed="true"] { transform: translateY(-0.3em); box-shadow: 0 calc(var(--lift) * 2) 0 var(--ink); }
 .face-btn[aria-pressed="true"] .pips { background: var(--sun); }
 .roll { justify-self: start; }
+
+/* ---------- Undercover ---------- */
+
+/* The paper slip: your word, the one loud thing on the phone (and two small ones on the shelf box).
+   Ink on paper with the hard shadow, tilted a little. A new deal slides it up and lands it. */
+.slip {
+  display: block;
+  max-width: 100%;
+  border: var(--line) solid var(--ink);
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: var(--lift) var(--lift) 0 var(--ink);
+  transform: rotate(-2deg);
+}
+.slip.dealt { animation: deal-in 0.45s cubic-bezier(0.3, 1.5, 0.55, 1) both; }
+@keyframes deal-in {
+  from { opacity: 0; transform: translateY(72px) rotate(6deg) scale(0.92); }
+}
+/* Baloo sits high in its box, so there is a little more room above the word than below. The word
+   steps down by length (the class comes from Components.slip) and wraps only as a last resort. */
+.slip-word {
+  display: block;
+  padding: 0.3em 0.4em 0.1em;
+  font: 800 1rem/1.05 var(--display);
+  text-align: center;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: none;
+}
+.slip-word.size-xl { font-size: clamp(3.25rem, 22vw, 4.75rem); }
+.slip-word.size-l { font-size: clamp(2.5rem, 17.5vw, 4rem); }
+.slip-word.size-m { font-size: clamp(1.75rem, 11.5vw, 2.75rem); }
+.slip-word.size-s { font-size: clamp(1.4rem, 9.4vw, 2.1rem); }
+.slip-word.size-xs { font-size: clamp(1.1rem, 8vw, 1.8rem); }
+.slip ~ .stage-hint { text-wrap: balance; }
+
+/* Table: a petrol-teal felt. The undercover count on the left where Liar's Dice has its total,
+   the instructions in the middle, Reroll on the right. */
+.felt-undercover { --felt: #2a8f8a; }
+.felt-note { max-width: 20em; font-size: 1.2em; font-weight: 800; text-align: center; }
+
+/* Seats here are only names: they can't be tapped, so they don't react to a hover or a press. */
+.seat.plain { grid-template-columns: auto 1fr; }
+.seat.plain:active { transform: none; }
+.seat.plain:not(.away):hover,
+.seat.plain:not(.away):active { background: var(--couch); box-shadow: var(--lift) var(--lift) 0 var(--ink); }
 
 /* ---------- Platform screens (join, waiting, phone lobby, queue, reconnecting, the game shelf) ----------
    Not in the redesign mockups yet: the first mockups' rules (docs/mockups/style.css) on the new tokens. */
@@ -1062,7 +1112,8 @@ ul { padding: 0; list-style: none; }
 
 .shelf { position: relative; margin-top: auto; }
 .shelf-row {
-  --shelf-h: clamp(240px, 46vh, 600px);
+  /* The 48vw cap only matters on a portrait tablet, where three boxes and the spines would run past the edge. */
+  --shelf-h: clamp(240px, min(46vh, 48vw), 600px);
   display: flex;
   align-items: flex-end;
   gap: clamp(6px, 0.7vw, 14px);
@@ -1079,7 +1130,8 @@ ul { padding: 0; list-style: none; }
 }
 
 .box-uno,
-.box-dice {
+.box-dice,
+.box-undercover {
   position: relative;
   flex: none;
   display: flex;
@@ -1107,7 +1159,8 @@ ul { padding: 0; list-style: none; }
 }
 /* The art fades back in once the box has slid out; it fades out at once when the box is shelved. */
 .box-uno > *,
-.box-dice > * { transition: opacity 0.2s 0.15s; }
+.box-dice > *,
+.box-undercover > * { transition: opacity 0.2s 0.15s; }
 .box-uno .box-logo {
   font: italic 900 calc(var(--shelf-h) * 0.17)/1 var(--card-font);
   color: var(--yellow);
@@ -1125,21 +1178,26 @@ ul { padding: 0; list-style: none; }
   transform: translate(-50%, -50%) rotate(var(--r)) translateX(var(--x));
 }
 .box-uno .box-tag,
-.box-dice .box-tag { color: #fff; font-weight: 800; font-size: 1.05em; }
+.box-dice .box-tag,
+.box-undercover .box-tag { color: #fff; font-weight: 800; font-size: 1.05em; }
 .box-uno:hover,
-.box-dice:hover { box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 0 4px var(--paper); }
+.box-dice:hover,
+.box-undercover:hover { box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 0 4px var(--paper); }
 /* The tapped box: lifted off the shelf toward the room, lit, and drawn over its neighbours. */
 .box-uno.selected,
-.box-dice.selected {
+.box-dice.selected,
+.box-undercover.selected {
   z-index: 1;
   transform: scale(1.08);
   box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 0 4px var(--paper), 0 0 calc(var(--shelf-h) * 0.07) rgb(255 214 160 / 0.4);
 }
 /* A game not tapped stands on the shelf as a spine, but at full brightness, unlike the unbuilt games. */
 .box-uno.shelved,
-.box-dice.shelved { width: var(--spine-w); height: var(--spine-h); }
+.box-dice.shelved,
+.box-undercover.shelved { width: var(--spine-w); height: var(--spine-h); }
 .box-uno.shelved > *,
-.box-dice.shelved > * { opacity: 0; transition-delay: 0s; }
+.box-dice.shelved > *,
+.box-undercover.shelved > * { opacity: 0; transition-delay: 0s; }
 .box-spine {
   position: absolute;
   inset: 0;
@@ -1153,10 +1211,12 @@ ul { padding: 0; list-style: none; }
   transition-delay: 0s;
 }
 .box-uno.shelved .box-spine,
-.box-dice.shelved .box-spine { opacity: 1; transition-delay: 0.25s; }
+.box-dice.shelved .box-spine,
+.box-undercover.shelved .box-spine { opacity: 1; transition-delay: 0.25s; }
 
 .box-dice { --spine-h: 84%; background: linear-gradient(105deg, rgb(255 255 255 / 0.16), transparent 40%), #8a3340; }
-.box-dice .box-logo {
+.box-dice .box-logo,
+.box-undercover .box-logo {
   font: italic 900 calc(var(--shelf-h) * 0.11)/0.95 var(--card-font);
   color: var(--paper);
   text-align: center;
@@ -1177,6 +1237,19 @@ ul { padding: 0; list-style: none; }
   transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--r));
   box-shadow: 0.25em 0.35em 0 rgb(0 0 0 / 0.35);
 }
+
+/* Undercover: a near-black box. Its logo is one long word, so it is a little smaller than the dice logo. */
+.box-undercover { --spine-h: 80%; background: linear-gradient(105deg, rgb(255 255 255 / 0.1), transparent 40%), #24232f; }
+.box-undercover .box-logo { font-size: calc(var(--shelf-h) * 0.092); }
+.box-undercover .box-art { position: relative; flex: 1; width: 100%; }
+.box-undercover .box-art .slip {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: max-content;
+  transform: translate(-50%, -50%) translate(var(--x), var(--y)) rotate(var(--r));
+}
+.box-undercover .box-art .slip-word { font-size: calc(var(--shelf-h) * 0.1); }
 
 .spine {
   flex: none;
@@ -1222,8 +1295,10 @@ ul { padding: 0; list-style: none; }
   .lobby { grid-template-columns: 1fr; }
   .tv-foot { flex-direction: column; align-items: flex-start; }
   .dice-total,
+  .undercover-total,
   .roll { justify-self: center; }
-  .dice-total b { font-size: 4.5em; }
+  .dice-total b,
+  .undercover-total b { font-size: 4.5em; }
   .winner h1 { font-size: 3.2em; }
 }
 @media (max-width: 480px) {

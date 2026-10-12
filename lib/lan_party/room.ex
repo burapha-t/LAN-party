@@ -143,13 +143,13 @@ defmodule LanParty.Room do
   def handle_call({:update_settings, _settings}, _from, state), do: {:reply, {:error, :not_in_lobby}, state}
 
   def handle_call(:start_game, _from, %{phase: :lobby} = state) do
-    case seated(state) do
-      [_, _ | _] = players ->
-        game = game_module(state).new(players, state.settings, state.game_opts)
-        {:reply, :ok, broadcast(%{state | phase: :playing, game: game, winner: nil})}
+    players = seated(state)
 
-      _fewer ->
-        {:reply, {:error, :not_enough_players}, state}
+    if length(players) >= Games.min_players(state.game_id) do
+      game = game_module(state).new(players, state.settings, state.game_opts)
+      {:reply, :ok, broadcast(%{state | phase: :playing, game: game, winner: nil})}
+    else
+      {:reply, {:error, :not_enough_players}, state}
     end
   end
 
