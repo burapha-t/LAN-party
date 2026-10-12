@@ -61,6 +61,11 @@ defmodule LanPartyWeb.TableLive do
     )
   end
 
+  # A game box grows when tapped, and goes back on the shelf as a spine while another is selected.
+  defp box_state(_id, nil), do: nil
+  defp box_state(id, id), do: "selected"
+  defp box_state(_id, _selected), do: "shelved"
+
   defp joined(%{order: []}), do: "Nobody has joined yet."
   defp joined(room), do: "Joined so far: " <> Enum.map_join(room.order, ", ", &Room.name(room, &1))
 
@@ -77,7 +82,7 @@ defmodule LanPartyWeb.TableLive do
         <section class="shelf" aria-label="Games">
           <div class="shelf-row">
             <a
-              class={["box-uno", @selected == :uno && "selected"]}
+              class={["box-uno", box_state(:uno, @selected)]}
               phx-click="select_game"
               phx-value-id="uno"
               aria-label="UNO, 2 to 8 players"
@@ -89,9 +94,10 @@ defmodule LanPartyWeb.TableLive do
                 <.card card={%Card{id: 0, color: nil, value: :wild}} style="--r:16deg;--x:42%" />
               </span>
               <span class="box-tag">2 to 8 players</span>
+              <span class="box-spine" aria-hidden="true"><b>UNO</b><small>2 to 8 players</small></span>
             </a>
             <a
-              class={["box-dice", @selected == :liars_dice && "selected"]}
+              class={["box-dice", box_state(:liars_dice, @selected)]}
               phx-click="select_game"
               phx-value-id="liars_dice"
               aria-label="Liar's Dice, 2 to 8 players"
@@ -103,6 +109,9 @@ defmodule LanPartyWeb.TableLive do
                 <Dice.face value={6} style="--x:0%;--y:-14%;--r:4deg" />
               </span>
               <span class="box-tag">2 to 8 players</span>
+              <span class="box-spine" aria-hidden="true">
+                <b>Liar's Dice</b><small>2 to 8 players</small>
+              </span>
             </a>
             <div :for={game <- @unbuilt} class="spine" style={@spines[game.id]}>
               <b>{game.name}</b><small>Not built yet</small>

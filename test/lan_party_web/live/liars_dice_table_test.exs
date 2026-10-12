@@ -78,10 +78,22 @@ defmodule LanPartyWeb.LiarsDiceTableTest do
       assert has_element?(table, ".box-dice .box-art .pips.n6")
       refute has_element?(table, ".spine b", "Liar's Dice")
 
+      refute has_element?(table, ".shelved")
+
       table |> element(".box-dice") |> render_click()
       assert has_element?(table, ".box-dice.selected")
       refute has_element?(table, ".box-uno.selected")
       assert Room.get_state().game_id == nil
+    end
+
+    test "the box not tapped goes back on the shelf as a spine; tapping it swaps", %{table: table} do
+      table |> element(".box-dice") |> render_click()
+      assert has_element?(table, ".box-uno.shelved .box-spine b", "UNO")
+      refute has_element?(table, ".box-dice.shelved")
+
+      table |> element(".box-uno") |> render_click()
+      assert has_element?(table, ".box-uno.selected")
+      assert has_element?(table, ".box-dice.shelved .box-spine b", "Liar's Dice")
     end
 
     test "the side panel shows only the tapped game, and its Play button picks it", %{
