@@ -1,0 +1,1018 @@
+# Undercover word pairs: one pair per line, "Word | Word". Lines starting with # are ignored.
+# See docs/undercover/README.md "Words".
+
+# General
+Chef | Waiter
+Baby | Toddler
+Hair | Beard
+Crime | Mystery
+Planet | Moon
+Ferrari | Lamborghini
+Pizza Hut | Domino's
+Apple | Samsung
+Prize | Medal
+Tarzan | Mowgli
+Backpack | Suitcase
+Ticket | Boarding pass
+Vinyl | Cassette
+Tesla | Toyota
+Beaver | Otter
+Deer | Antelope
+Lantern | Fireworks
+Weightlifting | Bodybuilding
+Notebook | Diary
+Jeans | Leggings
+Password | PIN
+Hat | Cap
+Rose | Tulip
+Horse | Donkey
+Car | Taxi
+Oreo | KitKat
+Japan | China
+Unicorn | Pegasus
+Snapchat | TikTok
+Breakfast | Brunch
+Mask | Helmet
+Series | Movie
+Crocodile | Alligator
+Ship | Submarine
+Potato | Rice
+PlayStation | Xbox
+Sandals | Flip-flops
+Coin | Banknote
+Singer | Rapper
+King | Emperor
+Balloon | Confetti
+Magic | Circus
+Reading | Writing
+Tokyo | Seoul
+Zombie | Mummy
+Hummus | Guacamole
+Cruise ship | Yacht
+Trumpet | Saxophone
+Belt | Tie
+Truck | Van
+Squid Game | Money Heist
+Giant | Dwarf
+Christmas | New Year
+Fox | Wolf
+Flower | Tree
+Yogurt | Pudding
+Noodles | Spaghetti
+Fireworks | Sparklers
+Tarot | Horoscope
+Pancake | Waffle
+Knight | Samurai
+Pizza | Pasta
+Dog | Wolf
+Banker | Accountant
+Shrimp | Crab
+Star Wars | Star Trek
+Dragon | Dinosaur
+Cinema | Streaming
+Influencer | Celebrity
+Comedy | Horror
+Pumpkin | Watermelon
+Teapot | Coffee pot
+Ice cream | Gelato
+Pigeon | Dove
+Sunflower | Daisy
+Happy | Excited
+Theme song | Soundtrack
+Iron | Hairdryer
+Croissant | Baguette
+Thunder | Lightning
+Wok | Frying pan
+Backpack | Briefcase
+Waiter | Bartender
+Amazon | Alibaba
+Parachute | Glider
+Football | Rugby
+Actor | Director
+James Bond | Sherlock Holmes
+Joke | Riddle
+Suitcase | Briefcase
+Lobster | Shrimp
+Teacher | Boss
+Red Bull | Monster
+Travel | Shopping
+Summer | Winter
+Seal | Walrus
+Supermarket | Mall
+Lipstick | Nail polish
+Ketchup | Mayonnaise
+Netflix | Disney
+Journalist | Writer
+Sheep | Goat
+Superhero | Villain
+Desert | Beach
+Cow | Buffalo
+Hunger | Thirst
+Karaoke | Concert
+Scooter | Skateboard
+Whale | Dolphin
+Calculator | Abacus
+Jam | Peanut butter
+Ant | Spider
+Hedgehog | Porcupine
+Youtuber | Streamer
+Shopping mall | Market
+Orange | Lemon
+Mouse | Rat
+Bulldog | Poodle
+Envelope | Parcel
+Water | Soda
+Walnut | Cashew
+Bread | Toast
+Castle | Dungeon
+Facebook | Twitter
+Taco | Burrito
+Pacific | Atlantic
+Bed | Hammock
+Earthquake | Volcano
+Skiing | Snowboarding
+Referee | Coach
+Bank | Post office
+Titanic | Avatar
+Canada | Australia
+Cupcake | Muffin
+Battery | Charger
+Paper | Cardboard
+Stamp | Sticker
+Hotel | Airbnb
+Headphones | Speakers
+Penguin | Seagull
+Bakery | Butcher
+Chocolate | Caramel
+Friends | The Office
+Bottle | Can
+Igloo | Cabin
+Pond | Puddle
+Fired | Quit
+Camera | Camcorder
+Hockey | Ice skating
+Rent | Mortgage
+Cartoon | Anime
+Santa Claus | Easter Bunny
+Sugar | Honey
+Turtle | Tortoise
+Broom | Vacuum cleaner
+Whisper | Shout
+Umbrella | Raincoat
+Rock climbing | Hiking
+Jellyfish | Starfish
+Gardening | Fishing
+Parrot | Peacock
+Hot dog | Sausage
+Football | Basketball
+Subtitles | Dubbing
+Ambulance | Fire truck
+Grammar | Vocabulary
+Dancer | Gymnast
+Grapes | Cherry
+Pliers | Wrench
+Rowing | Sailing
+Fog | Cloud
+Pillow | Blanket
+Minecraft | Roblox
+Burger King | McDonald's
+Chicken | Duck
+Casino | Arcade
+Lettuce | Cabbage
+Sloth | Koala
+Resume | Cover letter
+Cactus | Palm tree
+Gambling | Lottery
+Totoro | Pikachu
+Boxing | Wrestling
+Kung fu | Karate
+Brother | Sister
+Microsoft | Google
+Park | Garden
+Godzilla | King Kong
+Pot | Pan
+Day | Night
+Drama | Documentary
+BMW | Mercedes
+Elsa | Cinderella
+Violin | Cello
+Swimming | Diving
+Brake | Accelerator
+Ramen | Pho
+Milk | Cream
+Alps | Himalayas
+Blood | Sweat
+Library | Bookstore
+Drums | Tambourine
+Eagle | Owl
+Brazil | Argentina
+Fire | Lava
+Pizza | Calzone
+Harp | Violin
+Castle | Palace
+Nail | Screw
+Pony | Horse
+Gymnastics | Ballet
+Autumn | Spring
+Butter | Margarine
+Hulk | Thor
+Eraser | Ruler
+Goalkeeper | Striker
+Smartphone | Landline
+Jump rope | Hula hoop
+Judge | Jury
+Naruto | Dragon Ball
+Microphone | Speaker
+Skydiving | Bungee jumping
+Finger | Toe
+Sweden | Norway
+Tadpole | Frog
+Amazon | Nile
+Orca | Whale
+Peanut | Almond
+Snail | Slug
+Opera | Musical
+Seat belt | Helmet
+Elephant | Hippo
+Astronaut | Pilot
+Soap | Shampoo
+Cheesecake | Tiramisu
+Bikini | Swimsuit
+Author | Illustrator
+Star | Planet
+Airport | Train station
+Latte | Cappuccino
+Swan | Flamingo
+River | Lake
+Mustard | Wasabi
+Falafel | Kebab
+Grandma | Grandpa
+Email | Text message
+Pig | Boar
+Mermaid | Fairy
+Eyebrow | Eyelash
+Spotify | YouTube
+Arm | Leg
+Lung | Kidney
+Mechanic | Engineer
+Nightmare | Dream
+Magician | Clown
+Eclipse | Aurora
+Fishing | Hunting
+Driving license | Passport
+Angel | Devil
+Crow | Pigeon
+Perfume | Deodorant
+Duvet | Blanket
+Medal | Trophy
+Bee | Wasp
+Lamb | Calf
+Attic | Basement
+School | University
+Casino | Bingo
+Gandalf | Dumbledore
+Beethoven | Mozart
+Beatles | Rolling Stones
+Parrot | Toucan
+Tomato | Cucumber
+Jacket | Coat
+Waterfall | Fountain
+Actor | Singer
+Rich | Famous
+Emoji | Sticker
+App | Website
+Dictionary | Encyclopedia
+Pilot | Flight attendant
+Dice | Cards
+Coffee break | Lunch break
+Dentist | Surgeon
+Hello Kitty | Doraemon
+Trampoline | Swing
+Cookie | Brownie
+Duck | Goose
+Pajamas | Bathrobe
+Cockroach | Beetle
+Painting | Drawing
+Concert | Festival
+Pottery | Sculpture
+Church | Temple
+Sunrise | Sunset
+Hiking | Jogging
+Paintball | Laser tag
+Pharmacy | Clinic
+Ghost | Vampire
+Miner | Builder
+Frankenstein | Dracula
+Palace | Mansion
+Classroom | Office
+Monday | Friday
+Textbook | Novel
+Earth | Mars
+Bedroom | Living room
+Storm | Hurricane
+Basketball | Volleyball
+Cinderella | Snow White
+Popcorn | Nachos
+Knife | Scissors
+Police officer | Detective
+Prison | Police station
+Hollywood | Bollywood
+Pinocchio | Peter Pan
+Bagel | Donut
+Bargain | Haggle
+Samsung | Huawei
+Shy | Nervous
+Garlic | Onion
+Teacher | Professor
+Beer | Wine
+Credit card | Cash
+Rocket | Airplane
+Glacier | Iceberg
+Makeup | Moisturizer
+Yoga | Meditation
+Smartwatch | Fitbit
+Pikachu | Mario
+Plane | Helicopter
+Tour guide | Interpreter
+Stairs | Ladder
+Sun | Moon
+Minions | Smurfs
+Kimchi | Pickles
+Burger | Sandwich
+Queen | Princess
+Heineken | Corona
+Hotel | Hostel
+Omelette | Scrambled eggs
+Kitchen | Bathroom
+Barbershop | Spa
+Ogre | Goblin
+Gondola | Canoe
+Knitting | Sewing
+Sofa | Armchair
+Dragonfly | Butterfly
+Podcast | Radio
+Artist | Photographer
+Darts | Archery
+Mountain | Hill
+Giraffe | Zebra
+French fries | Potato chips
+Toothbrush | Toothpaste
+Caterpillar | Worm
+TV | Projector
+Ring | Bracelet
+Leaf | Branch
+Baker | Butcher
+Secret | Lie
+Hawaii | Bali
+Hand | Foot
+Cup | Glass
+Moonlight | Sunlight
+Saw | Axe
+Birthday | Anniversary
+Lecture | Meeting
+Lion King | Bambi
+Terminator | Robocop
+Eye | Ear
+Telescope | Microscope
+Yoga | Pilates
+Pen | Marker
+Fried rice | Risotto
+Bacon | Ham
+Curry | Chili
+Bus | Tram
+Theater | Opera house
+Astrology | Astronomy
+Monkey | Gorilla
+Marathon | Sprint
+Paris | Rome
+Spy | Detective
+Sitcom | Soap opera
+Flute | Clarinet
+Cricket | Baseball
+Notebook | Textbook
+Programmer | Hacker
+McDonald's | KFC
+Apron | Lab coat
+Red wine | White wine
+Lego | Barbie
+IKEA | Zara
+Mirror | Window
+Binoculars | Telescope
+Clock | Watch
+Train | Subway
+Joker | Batman
+Ostrich | Emu
+Oven | Microwave
+Strawberry | Raspberry
+Deadline | Appointment
+Tuk-tuk | Rickshaw
+Museum | Gallery
+Visa | Mastercard
+New York | London
+Rock | Pebble
+Toilet | Sink
+Fork | Spoon
+Trailer | Poster
+Tiger | Lion
+Mickey Mouse | Donald Duck
+Bowling | Billiards
+Meme | GIF
+Steering wheel | Handlebar
+Fan | Air conditioner
+Batman | Superman
+Surfing | Skateboarding
+Nintendo | Sega
+Flood | Drought
+Nun | Monk
+Video call | Voice call
+Mount Everest | Mount Fuji
+Ice | Snow
+Jigsaw puzzle | Crossword
+Coca-Cola | Fanta
+Airport | Harbor
+Bow tie | Necktie
+Meeting | Conference
+Grass | Moss
+Apple | Pear
+Simpsons | Family Guy
+Squirrel | Hamster
+Sword | Dagger
+Compass | Map
+Yoda | Darth Vader
+Rabbit | Hare
+Cowboy | Ninja
+Zoom | Skype
+Internship | Job
+Uniform | Suit
+Tent | Caravan
+Monopoly | Chess
+Cartoon | Comic book
+Crown | Tiara
+Soup | Stew
+Musical | Ballet
+Jet ski | Speedboat
+Bangkok | Singapore
+Passport | Visa
+Halloween | Carnival
+Sleep | Dream
+Phoenix | Dragon
+Zombie | Ghost
+Kitten | Puppy
+Wheelbarrow | Shopping cart
+Luck | Talent
+Tent | Sleeping bag
+Shrek | Frozen
+High heels | Boots
+Charger | Power bank
+Spider-Man | Iron Man
+Padlock | Safe
+Sailor | Fisherman
+Oscar | Grammy
+Tennis | Badminton
+Piano | Organ
+Venice | Amsterdam
+Glue | Tape
+Carnival | Circus
+Swamp | Rainforest
+Fear | Anger
+History | Geography
+Bear | Panda
+Toyota | Honda
+Roller skates | Skateboard
+Crab | Lobster
+Courthouse | Parliament
+Mother | Father
+Scarf | Tie
+Gym | Yoga studio
+Pineapple | Coconut
+Necklace | Earrings
+Running | Walking
+Tornado | Tsunami
+YouTube | Netflix
+Lighter | Matches
+Dumpling | Spring roll
+Taxi | Uber
+Theme park | Zoo
+Muay Thai | Taekwondo
+Paella | Risotto
+News | Weather forecast
+Canyon | Valley
+Printer | Scanner
+Keyboard | Mouse
+Documentary | Reality show
+Steak | Pork chop
+Elevator | Escalator
+Spreadsheet | Presentation
+Snooker | Pool
+Piggy bank | Wallet
+Eiffel Tower | Big Ben
+Neighbor | Stranger
+Lamp | Flashlight
+Mosquito | Fly
+Bathtub | Shower
+Olive | Grape
+Ginger | Garlic
+Banana | Mango
+Postman | Courier
+WhatsApp | Telegram
+Wi-Fi | Bluetooth
+Bus stop | Train station
+Windows | Mac
+Laugh | Smile
+Gossip | News
+Cooking | Baking
+Orchid | Lily
+Math | Physics
+Dubai | Las Vegas
+Cat | Tiger
+Washing machine | Dishwasher
+Chameleon | Gecko
+Cinnamon | Vanilla
+Salt | Pepper
+Curtain | Blinds
+Easter | Christmas
+Heart | Brain
+Coffee | Tea
+Songkran | Holi
+Lime | Lemon
+Board game | Video game
+Love | Friendship
+Dolphin | Shark
+Shorts | Trousers
+Scorpion | Spider
+Sausage | Salami
+Cheetah | Panther
+Prince | Knight
+Radiator | Fan
+Instagram | TikTok
+Valentine's Day | Mother's Day
+Blender | Mixer
+Peeler | Grater
+Blackboard | Whiteboard
+Chopsticks | Fork
+Chess | Poker
+Juice | Smoothie
+Comet | Meteor
+Lazy | Tired
+Golf | Baseball
+Candle | Lamp
+Galaxy | Universe
+Fairy | Elf
+Cycling | Skating
+Sushi | Sashimi
+Firefighter | Paramedic
+Campsite | Resort
+Octopus | Squid
+Google | Bing
+Fried chicken | Roast chicken
+Cave | Mine
+Bridge | Tunnel
+Muscle | Fat
+Elephant | Rhino
+Rolex | Casio
+Manga | Comic book
+Forest | Jungle
+Hammer | Screwdriver
+Plate | Bowl
+Vase | Jar
+Doctor | Nurse
+Knee | Elbow
+Gloves | Mittens
+Lottery | Raffle
+Beach | Swimming pool
+Tooth | Tongue
+Bookshelf | Wardrobe
+Pop | Jazz
+Snake | Lizard
+Zara | H&M
+Camping | Picnic
+Mop | Sponge
+Spatula | Whisk
+Thailand | Vietnam
+Uncle | Cousin
+Rock | Metal
+Cinema | Theater
+Bigfoot | Yeti
+Fortnite | Minecraft
+Cry | Scream
+Butterfly | Moth
+Chair | Stool
+Raft | Kayak
+Cheese | Butter
+Triathlon | Marathon
+Pencil | Crayon
+Lawyer | Judge
+Bicycle | Motorcycle
+Lunch | Dinner
+Scientist | Inventor
+Energy drink | Cola
+Smoothie | Milkshake
+Laptop | Tablet
+Street food | Restaurant
+Pringles | Doritos
+Tuna | Salmon
+Tractor | Bulldozer
+Intern | Boss
+Harry Potter | Star Wars
+Dancing | Singing
+Frisbee | Boomerang
+Olympics | World Cup
+Marvel | DC
+Recess | Lunch break
+Wrinkle | Scar
+Nike | Adidas
+Lollipop | Chewing gum
+Sweater | Hoodie
+Spotify | Apple Music
+Lion | Leopard
+Swimming | Water polo
+Frog | Toad
+Matrix | Inception
+Rainbow | Sunset
+Vampire | Werewolf
+Episode | Season
+Guitar | Ukulele
+Plumber | Electrician
+Boat | Ferry
+Sumo | Boxing
+Robot | Drone
+Diamond | Gold
+Pirate | Viking
+Printer | Photocopier
+Gucci | Prada
+Italy | Spain
+Camel | Llama
+Egypt | Greece
+Vet | Doctor
+Fridge | Freezer
+Balloon | Kite
+Robot | Alien
+Steam train | Bullet train
+Fashion designer | Architect
+Suit | Tuxedo
+Morning | Evening
+Selfie | Photo
+Bison | Buffalo
+Orchestra | Choir
+Lemonade | Iced tea
+Interview | Exam
+Coca-Cola | Pepsi
+Nose | Mouth
+Louis Vuitton | Chanel
+Key | Lock
+Hen | Rooster
+Mario | Sonic
+Reality show | Talent show
+Report card | Payslip
+Diwali | Halloween
+Kangaroo | Koala
+Homework | Exam
+Lifeguard | Swimmer
+Calculator | Ruler
+Kiss | Hug
+Shadow | Reflection
+Sunglasses | Goggles
+Dress | Skirt
+Barber | Hairdresser
+Friend | Colleague
+Freckle | Mole
+Peach | Apricot
+Restaurant | Cafe
+Broccoli | Cauliflower
+Mug | Wine glass
+Biology | Chemistry
+Retirement | Vacation
+Bubble tea | Milkshake
+Sci-fi | Fantasy
+Action | Thriller
+Disney | Pixar
+Zoo | Aquarium
+Memory | Imagination
+Colleague | Classmate
+Hot chocolate | Coffee
+Sneakers | Sandals
+Shoulder | Hip
+Ferrari | Porsche
+Pyramids | Great Wall
+Donut | Muffin
+T-shirt | Tank top
+Uniform | Costume
+Nutella | Peanut butter
+Pie | Tart
+Hospital | Pharmacy
+Rain | Snow
+Espresso | Americano
+Library | Cafeteria
+Towel | Napkin
+Adidas | Puma
+Black hole | Supernova
+Dim sum | Sushi
+Carrot | Radish
+Witch | Wizard
+Rice cooker | Slow cooker
+Dog | Puppy
+Karate | Judo
+
+# 18+
+Bad kisser | Bad dancer
+Bio | Resume
+Love letter | Poem
+Blush | Sweat
+Spanking | Tickling
+Afterparty | House party
+Honeymoon | Vacation
+Rave | Disco
+Cellulite | Stretch marks
+Cleavage | Six-pack
+Sugar baby | Sugar daddy
+Vodka | Whisky
+Drinking game | Card game
+Cloakroom | Locker
+Lovebirds | Newlyweds
+Mistress | Wife
+Flowers | Jewelry
+Bondage | Roleplay
+Rebound | Ex
+Mascara | Eyeliner
+Sunbathing | Tanning bed
+Tongue ring | Belly ring
+Divorce lawyer | Wedding planner
+Skinny dipping | Hot tub
+Botox | Filler
+One-night stand | Fling
+Eye contact | Wink
+Safeword | Password
+Pub crawl | Road trip
+Nurse outfit | Maid outfit
+Miniskirt | Shorts
+Jealous | Possessive
+Kiss | Make out
+Hangover | Food poisoning
+Beach bar | Rooftop bar
+Womanizer | Flirt
+Open marriage | Monogamy
+Romance novel | Erotica
+Lap dance | Massage
+Blindfold | Gag
+Single | Taken
+Cheating | Lying
+Abs | Biceps
+Beard | Mustache
+Fake ID | Guest list
+Phone sex | Sexting
+Handcuffs | Blindfold
+Dominant | Submissive
+Nightclub | Karaoke bar
+Piano bar | Karaoke bar
+Foot rub | Back rub
+Fake orgasm | Fake smile
+Beer goggles | Reading glasses
+Strip club | Comedy club
+Costume party | Masquerade
+Bubble bath | Shower
+Toupee | Hair extensions
+Cocktail | Shot
+Lipstick | Lip gloss
+Romantic | Cheesy
+Cuddling | Spooning
+Drunk | Tipsy
+Margarita | Mojito
+Blackout | Fainting
+Cigar | Hookah
+Lingerie | Pajamas
+Shaving cream | Whipped cream
+Striptease | Burlesque
+Pajama party | Pool party
+Speedo | Swim trunks
+Sangria | Mulled wine
+Hot yoga | Naked yoga
+Butt | Breasts
+Boxers | Briefs
+Chug | Sip
+Bourbon | Scotch
+Tattoo | Henna
+Morning after | Night before
+Tattoo | Piercing
+Matching outfits | Couple tattoos
+Tip | Bribe
+Tequila | Vodka
+Tequila | Mezcal
+Whip | Paddle
+Sweaty palms | Cold feet
+Office romance | Summer fling
+Razor | Tweezers
+Romantic movie | Horror movie
+Salsa | Tango
+OnlyFans | Instagram
+Sleep talking | Sleepwalking
+Bedroom | Backseat
+Naked | Topless
+Open zipper | Torn pants
+Apology | Excuse
+Movie date | Dinner date
+Mouthwash | Mints
+Pee stain | Sweat stain
+Wedding ring | Engagement ring
+Valentine's Day | Birthday
+Threesome | Double date
+Feather | Whip
+Groom | Best man
+Divorce papers | Marriage license
+Guest list | Queue
+Fishnets | Stockings
+Strawberries | Champagne
+Argument | Silent treatment
+Oysters | Chocolate
+Thong | Boxers
+Stripper | Dancer
+Bra | Thong
+Bar | Pub
+Sauna | Steam room
+Taxi ride | Walk home
+Sex tape | Home video
+Boyfriend | Husband
+Ghosting | Cheating
+Tipsy | Dizzy
+Massage | Spa
+Cigarette | Vape
+Constipation | Diarrhea
+Cold sore | Pimple
+Ibiza | Las Vegas
+Hotel room | Honeymoon suite
+Condom | Pill
+Nipple | Belly button
+Crop top | Corset
+Whipped cream | Chocolate sauce
+Waxing | Threading
+Pillow talk | Bedtime story
+Foreplay | Cuddling
+Candle wax | Ice cube
+Filter | Photoshop
+Pina colada | Daiquiri
+Marriage | Engagement
+Porn | Erotica
+Armpit hair | Leg hair
+Compliment | Pickup line
+Wristband | Hand stamp
+Pimple | Blackhead
+Silk scarf | Rope
+Aphrodisiac | Viagra
+Crush | Obsession
+Messy hair | Smudged makeup
+Breakup song | Love song
+Candlelit dinner | Picnic
+Rave | Festival
+Love | Lust
+Cheek kiss | Lip kiss
+Last train | Last bus
+Revenge | Forgiveness
+Plastic surgery | Botox
+Bouquet toss | Cake cutting
+Romeo | Casanova
+Plunger | Toilet brush
+Condom | Lube
+Cocktail dress | Ball gown
+Beer festival | Wine tasting
+Sober | Drunk
+Mosh pit | Slow dance
+Drunk text | Love letter
+Slow dance | Twerking
+Pint | Shot
+Morning breath | Bad breath
+Breakup | Divorce
+Flirt | Tease
+Orgasm | Sneeze
+Wink | Smirk
+Love hotel | Motel
+Bartender | Bouncer
+Glow stick | Confetti
+Engaged | Married
+Moan | Sigh
+Corset | Bra
+Chest hair | Back hair
+Make-up sex | Breakup sex
+Sexting | Flirting
+Red flag | Deal breaker
+Bridal shower | Bachelor party
+Dirty joke | Pun
+Lounge | Rooftop bar
+Wet wipes | Toilet paper
+Wingman | Matchmaker
+Sweat stain | Coffee stain
+Profile photo | Passport photo
+Strip club | Nightclub
+Sip | Gulp
+Mocktail | Cocktail
+Nudist | Streaker
+Smelly feet | Body odor
+Minibar | Room service
+Fetish | Obsession
+Bachelor party | Girls' night
+Gin tonic | Rum cola
+Last call | Happy hour
+Sunscreen | Tanning oil
+Soulmate | Best friend
+Greasy breakfast | Cold shower
+Sexy | Cute
+Phone number | Business card
+Love bite | Mosquito bite
+Perfume | Cologne
+Phuket | Ibiza
+Beer | Cider
+Pee | Poop
+Virgin | Experienced
+Roleplay | Costume
+Love bite | Bruise
+Fifty Shades | Twilight
+Bathrobe | Towel
+Love Island | The Bachelor
+Divorce | Separation
+Nose job | Face lift
+Awkward silence | Awkward hug
+In-laws | Parents
+Lager | Stout
+Dirty talk | Pillow talk
+Piercing | Earring
+Hinge | Tinder
+Bouncer | Bodyguard
+Lap dance | Pole dance
+Speed dating | Dating app
+Dance floor | Stage
+Hot tub | Sauna
+Snoring | Sleepwalking
+Borrowed shirt | Stolen hoodie
+Monogamy | Polygamy
+Veil | Bouquet
+Cold shower | Hot bath
+Wine bar | Sports bar
+Six-pack | Beer belly
+Waxing | Shaving
+Fake tan | Sunburn
+Burp | Fart
+Handcuffs | Rope
+Date | One-night stand
+First date | Job interview
+Holding hands | Kissing
+Orgy | Pool party
+Swinger | Single
+Hangover | Headache
+Bidet | Toilet paper
+Whisky | Cognac
+Dating app | Matchmaker
+Naked | Underwear
+Bad breath | Body odor
+Backseat | Hotel room
+Block | Unfollow
+Hangover cure | Painkiller
+Shaving | Plucking
+Proposal | Wedding
+Cabaret | Burlesque
+Wine | Champagne
+Girlfriend | Wife
+Thin walls | Loud neighbors
+Sake | Soju
+Lube | Massage oil
+Strobe light | Disco ball
+Collar | Leash
+Sugar daddy | Gold digger
+Push-up bra | Sports bra
+Viagra | Aspirin
+Coffee date | Dinner date
+Gold digger | Gigolo
+Tinder | Bumble
+Photo booth | Karaoke booth
+Keg | Bottle
+Vibrator | Dildo
+Jacuzzi | Bathtub
+Dandruff | Lice
+Vibrator | Massage gun
+Karaoke | Open mic
+Dumped | Fired
+Fling | Relationship
+Leather | Latex
+Brewery | Winery
+Ex | Crush
+Girls' night | Boys' night
+Wedding | Funeral
+Drunk tattoo | Bad haircut
+Ghosting | Breakup
+Pole dance | Striptease
+Pillow fight | Food fight
+Spare toothbrush | Phone charger
+Blind date | Speed dating
+Meeting parents | Meeting ex
+First kiss | First date
+Streaker | Mascot
+Techno | Pop
+Wet dream | Nightmare
+Butterflies | Nausea
+Vomit | Diarrhea
+Swipe right | Super like
+Nightcap | Midnight snack
+Vomit | Burp
+Fart | Sneeze
+Wasted | Passed out
+Sex shop | Lingerie shop
+Earwax | Snot
+Fake ID | Student card
+Naughty | Kinky

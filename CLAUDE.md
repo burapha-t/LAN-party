@@ -19,6 +19,10 @@ see "Where things live".
   2026-10-12 by two subagents on branch `liars-dice`, styled on the redesign; `mix test` passes with 212
   tests). Not yet tried on real devices: still to do are the party test and watching the roll animation
   on an iPhone and an Android phone (`design.md` §7 "Manual").
+- **Undercover:** clarifying questions done → spec (`docs/undercover/README.md`, decided in chat
+  2026-10-13) → code and the 1012-pair word list (built 2026-10-13 by two subagents on the local
+  `undercover` branch, which is never merged or pushed; `mix test` passes with 294 tests). Checked in
+  headless Edge only; still to do: real phones and a party test.
 - **Toolchain on the host PC:** Erlang/OTP 29.1.1 and Elixir 1.20.4 were installed with winget, which
   didn't add them to PATH. Until it's added, prefix commands, e.g. in PowerShell:
   `$env:Path = "C:\Program Files\Erlang OTP\bin;C:\Program Files\Elixir\bin;" + $env:Path`.
@@ -34,6 +38,8 @@ see "Where things live".
 | `docs/uno/design.md` | Design spec for the first build (platform + UNO): screens, architecture, rules engine, tests |
 | `docs/uno/plan.md` | Implementation plan for the first build: 13 tasks, test-first |
 | `docs/liars-dice/` | Everything about Liar's Dice. **Read `docs/liars-dice/README.md` before working on it.** `design.md` is its spec, including the platform changes for a second game; `plan.md` is the implementation plan it was built from |
+| `docs/undercover/` | Everything about Undercover. **Read `docs/undercover/README.md` before working on it.** It is the whole spec (no design.md, plan or mockups). On the `undercover` branch only |
+| `priv/undercover/pairs.txt` | Undercover's word pairs (about 1000, about 30% 18+), read at compile time |
 | `docs/mockups/` | Static HTML mockups of every phone and table screen, grouped by game: `<game>/phone/`, `<game>/table/`, plus `platform/` for the screens every game shares (join, waiting, phone lobby, queue, reconnecting, the game picker); shared `style.css`. Build the real screens to match them |
 | `docs/mockups/redesign/` | Redesign pass (ink outlines, hard offset shadows, buttons that press down), with its own `style.css`. UNO and Liar's Dice screens are done, in `uno/` and `liars-dice/` with the same file names as the originals. The platform screens aren't redone yet, so it hasn't replaced the originals. The app's UNO screens follow it; `assets/css/app.css` is its `style.css` plus the platform rules moved onto its tokens (2026-10-12) |
 | `lib/`, `test/`, ... | The Phoenix project (platform + UNO), hand-written without `mix phx.new`; layout in `docs/uno/design.md` §3 |
@@ -50,6 +56,7 @@ see "Where things live".
 |---|---|---|---|
 | UNO | First game, in design | The card game. Phone: your hand. Table: discard pile, whose turn, every player's card count. | `docs/uno/` |
 | Liar's Dice | Second game, built | Bluffing dice game, played free-form (bids are out loud). Phone: your dice, with a rolling animation. Table: each player's dice count, the total, Roll, a face picker that lights up matching dice on every phone, and "take a die". | `docs/liars-dice/` |
+| Undercover | Third game, built on the local `undercover` branch only (its word list has 18+ pairs) | Party word game, played free-form: describing and voting are out loud. Phone: your word, big. Table: how many undercovers there are, and Reroll. | `docs/undercover/` |
 | Quiplash | Planned, not designed yet | Everyone answers a prompt with something funny on their phone, then everyone votes. Table: answers side by side, scores. | none yet |
 | Paranoia | Planned, not designed yet | One player privately sends a question about the group ("Who here would…?") to another player's phone. That player says a name out loud; a coin flip decides if the table reveals the question. | none yet |
 | Who wrote it? | Planned, not designed yet | The table asks a personal question; everyone answers anonymously on their phone. The table shows the answers one by one and everyone votes on who wrote each. Points for guessing right and for fooling others. | none yet |
@@ -205,11 +212,16 @@ None right now.
 | A second game → the Room hands moves to the picked game through a small shared interface (`LanParty.Game`) | Planned in the UNO spec for when a second game arrives; details in `docs/liars-dice/design.md` §3 |
 | Table game picker: playable games start as spines the size of the unbuilt ones but at full brightness; tapping one only selects it (it grows into its box and lights up, on that table device only) and the others stay spines; the side panel's Play button picks the game. Supersedes "tapping a box picks the game" and the mockup `platform/table/index.html` | User's choice (2026-10-12): both boxes looked lit at once; one clear choice before everyone's phone switches |
 | Liar's Dice is styled on the redesign (`docs/mockups/redesign/liars-dice/`): no background glow, a wine-red felt | User's choice (2026-10-12): build on the new redesign, which dropped the glows (supersedes `design.md` §2 item 13) |
+| Undercover lives on the local `undercover` branch only; it is never merged into `main` or pushed | User's choice (2026-10-13): the word list has 18+ pairs that shouldn't be public |
+| Undercover is free-form: the server deals the words; describing, voting and revealing are out loud. The table has only Reroll (plus Reset and Change game) | User's choice (2026-10-13): a big word on each phone and one button on the table |
+| Undercover: 1 undercover with 3–5 players, 2 with 6–8; no Mr. White; nobody is told their role | User's choice (2026-10-13): the usual rules, kept simple |
+| Undercover's words are one mixed pool, about 30% 18+, in plain international English | User's choice (2026-10-13): the table stays just Reroll; not every guest is American |
+| A game can need more than 2 players to start (Undercover needs 3) | With 2 players, the undercover has nobody to blend in with |
 
 ## Working agreements for future sessions
 
 - Don't build anything the user hasn't agreed to. Ask when a choice belongs to the user.
 - Prefer the simplest thing that works at a real party: one command to start, one URL to join.
-- UNO and Liar's Dice are built; the other games in "Games" are planned, not designed. Keep
+- UNO and Liar's Dice are built, and Undercover on its own branch; the other games in "Games" are planned, not designed. Keep
   game logic separate from lobby/room logic. Games share only the small `LanParty.Game` interface
   (`docs/liars-dice/design.md` §3); don't grow it into a generic framework until a game needs more.
