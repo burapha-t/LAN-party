@@ -40,6 +40,7 @@ defmodule LanParty.Room do
   def start_game(server \\ __MODULE__), do: GenServer.call(server, :start_game)
   def table_act(server \\ __MODULE__, action), do: GenServer.call(server, {:table_act, action})
   def back_to_lobby(server \\ __MODULE__), do: GenServer.call(server, :back_to_lobby)
+  def remove(server \\ __MODULE__, token), do: GenServer.call(server, {:remove, token})
 
   ## Reading a state (pure helpers for the LiveViews)
 
@@ -63,6 +64,7 @@ defmodule LanParty.Room do
        order: [],
        monitors: %{},
        kicked: %{},
+       removed: MapSet.new(),
        settings: Rules.default_settings(),
        game: nil,
        winner: nil
@@ -93,7 +95,8 @@ defmodule LanParty.Room do
             state
             | people: Map.put(state.people, token, person),
               order: state.order ++ [token],
-              kicked: Map.delete(state.kicked, token)
+              kicked: Map.delete(state.kicked, token),
+              removed: MapSet.delete(state.removed, token)
           }
           |> watch(token, pid)
 
@@ -167,6 +170,18 @@ defmodule LanParty.Room do
   end
 
   def handle_call(:back_to_lobby, _from, state), do: {:reply, {:error, :not_now}, state}
+
+  # The table removes someone from a game's lobby: a kick, as if their grace period ran out.
+  def handle_call({:remove, token}, _from, %{phase: :lobby} = state) do
+    if Map.has_key?(state.people, token) do
+      state = state |> kick(token) |> Map.update!(:removed, &MapSet.put(&1, token))
+      {:reply, :ok, broadcast(state)}
+    else
+      {:reply, {:error, :unknown_player}, state}
+    end
+  end
+
+  def handle_call({:remove, _token}, _from, state), do: {:reply, {:error, :not_in_lobby}, state}
 
   @impl true
   def handle_info({:DOWN, ref, :process, _pid, _reason}, state) do

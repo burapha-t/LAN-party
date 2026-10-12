@@ -120,6 +120,29 @@ defmodule LanParty.RoomTest do
 
       assert Room.queued(Room.get_state(room)) == ["t3"]
     end
+
+    test "the table removes a player like a kick; the first in the queue takes the seat", %{room: room} do
+      for i <- 1..9, do: join!(room, "t#{i}", "P#{i}")
+      assert Room.remove(room, "t1") == :ok
+
+      state = Room.get_state(room)
+      refute Map.has_key?(state.people, "t1")
+      assert state.kicked["t1"] == "P1"
+      assert MapSet.member?(state.removed, "t1")
+      assert "t9" in Room.seated(state)
+
+      join!(room, "t1", "P1")
+      refute MapSet.member?(Room.get_state(room).removed, "t1")
+    end
+
+    test "players are removed only from the lobby", %{room: room} do
+      join!(room, "t1", "Alice")
+      join!(room, "t2", "Bob")
+      assert Room.remove(room, "nobody") == {:error, :unknown_player}
+
+      :ok = Room.start_game(room)
+      assert Room.remove(room, "t1") == {:error, :not_in_lobby}
+    end
   end
 
   describe "a round" do

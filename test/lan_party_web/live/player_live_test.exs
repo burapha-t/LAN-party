@@ -58,6 +58,17 @@ defmodule LanPartyWeb.PlayerLiveTest do
     assert has_element?(view, ~s(input#name[value="Erin"]))
   end
 
+  test "a phone the table removed is told so, with its name filled in", %{conn: conn} do
+    {:ok, view, _html} = live(phone(conn, "erin"), ~p"/")
+    view |> form("#join", %{name: "Erin"}) |> render_submit()
+    :ok = Room.pick_game(:uno)
+    :ok = Room.remove("erin")
+    sync(view)
+
+    assert has_element?(view, ".notice", "The table removed you from the game.")
+    assert has_element?(view, ~s(input#name[value="Erin"]))
+  end
+
   test "when the Room restarts, the phone reloads", %{conn: conn} do
     {:ok, view, _html} = live(phone(conn, "erin"), ~p"/")
     Process.exit(Process.whereis(Room), :kill)

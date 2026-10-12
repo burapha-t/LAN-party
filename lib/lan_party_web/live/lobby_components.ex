@@ -28,7 +28,10 @@ defmodule LanPartyWeb.LobbyComponents do
   defp initial(nil), do: ""
   defp initial(name), do: name |> String.first() |> String.upcase()
 
-  @doc "The table lobby's Players panel: seated players in arrival order, then the free seats."
+  @doc """
+  The table lobby's Players panel: seated players in arrival order, then the free seats. Tapping a
+  player sends "ask_remove" to the table's LiveView, which opens the Remove panel.
+  """
   attr :room, :map, required: true
 
   def players_panel(assigns) do
@@ -41,7 +44,11 @@ defmodule LanPartyWeb.LobbyComponents do
         <span class="seats-left">{length(@seated)} of 8 seats taken</span>
       </div>
       <ul class="roster">
-        <li :for={token <- @seated}><.avatar room={@room} token={token} /><span>{Room.name(@room, token)}</span></li>
+        <li :for={token <- @seated}>
+          <button type="button" aria-haspopup="dialog" phx-click="ask_remove" phx-value-token={token}>
+            <.avatar room={@room} token={token} /><span>{Room.name(@room, token)}</span>
+          </button>
+        </li>
         <li :for={_seat <- 1..(8 - length(@seated))//1} class="open">
           <span class="avatar" aria-hidden="true"></span><span>Free seat</span>
         </li>

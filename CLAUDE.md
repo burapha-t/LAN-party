@@ -194,6 +194,7 @@ None right now.
 | More than 8 people: seats in arrival order; seated players keep their seats at "Play again" | Simplest; revisit if parties regularly exceed 8 |
 | A seat freed in the lobby goes to the first person in the queue at once | User's choice (2026-10-12): don't make them wait an extra round |
 | A kicked player's join screen fills in their old name | User's choice (2026-10-12): matches the mockup; one tap to rejoin |
+| The table can remove a player from a game's lobby: tap their name in Players, then Remove (an X cancels). It's a kick (seat goes to the first in the queue); the phone says the table removed them, with the name filled in | User's choice (2026-10-12): lobby only, since in a round tapping a seat already makes them draw or takes a die |
 | Fonts load from Google Fonts; offline, pages fall back to the system font | User's choice (2026-10-12): most party Wi-Fi has internet; the game works either way |
 | Planned games after UNO: Liar's Dice, Quiplash, Paranoia, Who wrote it?, Love Letter, Never Have I Ever, Killer | User's choice. Liar's Dice is a small build that fits the kick and last-player-wins rules; Quiplash has no turns, so the shared lobby code won't assume turn-based play; Paranoia, Who wrote it?, Never Have I Ever and Killer are about the people in the room; Love Letter is a tiny card game |
 | Liar's Dice is free-form: the server rolls, counts dice, and decides who's out and who won; bids, turns and "Liar!" happen out loud | User's choice (2026-10-12): as close to playing by hand as possible |

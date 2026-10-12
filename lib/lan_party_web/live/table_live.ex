@@ -28,7 +28,7 @@ defmodule LanPartyWeb.TableLive do
       Process.monitor(Room)
     end
 
-    {:ok, socket |> assign(selected: nil) |> assign_room(Room.get_state())}
+    {:ok, socket |> assign(selected: nil, removing: nil) |> assign_room(Room.get_state())}
   end
 
   # Tapping a box only selects it on this device; the side panel's Play button picks the game.
@@ -47,6 +47,25 @@ defmodule LanPartyWeb.TableLive do
     {:noreply, socket}
   end
 
+  # Tapping a player in a game's lobby opens the Remove panel on this table device.
+  def handle_event("ask_remove", %{"token" => token}, socket) do
+    room = socket.assigns.room
+
+    if room.phase == :lobby and Map.has_key?(room.people, token),
+      do: {:noreply, assign(socket, removing: token)},
+      else: {:noreply, socket}
+  end
+
+  # A second tap on Remove arrives after the panel closed: ignore it.
+  def handle_event("remove", _params, %{assigns: %{removing: nil}} = socket), do: {:noreply, socket}
+
+  def handle_event("remove", _params, socket) do
+    Room.remove(socket.assigns.removing)
+    {:noreply, assign(socket, removing: nil)}
+  end
+
+  def handle_event("cancel_remove", _params, socket), do: {:noreply, assign(socket, removing: nil)}
+
   @impl true
   def handle_info({:party_updated, room}, socket), do: {:noreply, assign_room(socket, room)}
   def handle_info({:DOWN, _ref, :process, _pid, _reason}, socket), do: {:noreply, redirect(socket, to: ~p"/table")}
@@ -56,6 +75,8 @@ defmodule LanPartyWeb.TableLive do
       room: room,
       main_class: if(is_nil(room.game_id), do: "tv shelf-room", else: "tv"),
       selected: if(is_nil(room.game_id), do: socket.assigns.selected),
+      # The Remove panel closes once the lobby is over or its player has left.
+      removing: if(room.phase == :lobby and room.people[socket.assigns.removing], do: socket.assigns.removing),
       unbuilt: Enum.reject(Games.all(), & &1.playable?),
       spines: @spines
     )
@@ -151,6 +172,17 @@ defmodule LanPartyWeb.TableLive do
         id="liars-dice-table"
         room={@room}
       />
+
+      <div :if={@removing} class="modal-scrim">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="dlg">
+          <button type="button" class="modal-x" aria-label="Cancel" phx-click="cancel_remove">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+          <h2 id="dlg">Remove {Room.name(@room, @removing)}?</h2>
+          <p>Their seat opens up, and their phone goes back to the join screen.</p>
+          <button class="btn" phx-click="remove">Remove</button>
+        </div>
+      </div>
     </main>
     """
   end

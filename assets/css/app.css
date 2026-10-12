@@ -703,6 +703,22 @@ ul { padding: 0; list-style: none; }
 .roster .open { color: var(--haze); font: 700 1.05em/1 var(--body); }
 .roster .open .avatar { background: transparent; border-style: dashed; border-color: var(--haze); font-size: 1.1em; }
 
+/* A seated player is a button: tap to open the Remove panel */
+.roster li button {
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+@media (hover: hover) { .roster li button:hover { color: var(--sun); } }
+
 .rules { display: grid; }
 .rule {
   display: flex;
@@ -768,6 +784,7 @@ ul { padding: 0; list-style: none; }
   background: rgb(13 10 38 / 0.72);
 }
 .modal {
+  position: relative;
   width: min(100%, 30em);
   padding: 1.4em 1.8em 1.8em;
   border: var(--line) solid var(--ink);
@@ -778,6 +795,30 @@ ul { padding: 0; list-style: none; }
 .modal h2 { padding-top: 0.1em; font: 800 2em/1.1 var(--display); }
 .modal p { margin-top: 0.5em; color: var(--haze); }
 .modal .buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8em; margin-top: 1.6em; }
+.modal > .btn { width: 100%; margin-top: 1.6em; }
+
+/* A panel with one action closes with an X in its corner, a round button that presses down */
+.modal-x {
+  position: absolute;
+  top: 1.1em;
+  right: 1.1em;
+  display: grid;
+  place-items: center;
+  width: 2.8em;
+  height: 2.8em;
+  padding: 0;
+  border: var(--line) solid var(--ink);
+  border-radius: 50%;
+  background: var(--couch-2);
+  color: var(--paper);
+  font-size: inherit;
+  box-shadow: 0 var(--lift) 0 var(--ink);
+  cursor: pointer;
+  transition: transform 0.06s, box-shadow 0.06s;
+}
+.modal-x:active { transform: translateY(calc(var(--lift) - 2px)); box-shadow: 0 2px 0 var(--ink); }
+.modal-x svg { width: 1.2em; height: 1.2em; fill: none; stroke: currentColor; stroke-width: 3.5; stroke-linecap: round; }
+.modal-x + h2 { padding-right: 2.4em; }
 
 /* How many cards to draw */
 .stepper { display: flex; align-items: center; justify-content: center; gap: 1.2em; margin-top: 0.8em; }

@@ -43,10 +43,17 @@ defmodule LanPartyWeb.PlayerLive do
   defp assign_room(socket, room) do
     me = room.people[socket.assigns.token]
 
+    # Removed by the table while this page was open: fill in the old name, as a reload would.
+    socket =
+      if socket.assigns[:me] && !me,
+        do: assign(socket, name: Map.get(room.kicked, socket.assigns.token, "")),
+        else: socket
+
     assign(socket,
       room: room,
       me: me,
       kicked?: Map.has_key?(room.kicked, socket.assigns.token),
+      removed?: MapSet.member?(room.removed, socket.assigns.token),
       brand: if(me && room.game_id, do: Games.name(room.game_id), else: "LAN Party")
     )
   end
@@ -64,7 +71,10 @@ defmodule LanPartyWeb.PlayerLive do
       </header>
 
       <div :if={!@me} class="message">
-        <p :if={@kicked?} class="notice">
+        <p :if={@kicked? and @removed?} class="notice">
+          The table removed you from the game. Join again for the next game.
+        </p>
+        <p :if={@kicked? and !@removed?} class="notice">
           You were away too long and left the game. Join again for the next game.
         </p>
         <form class="join" id="join" phx-submit="join">
