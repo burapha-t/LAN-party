@@ -12,4 +12,10 @@ defmodule LanParty.GamesTest do
     refute Games.playable?(:chess)
     assert Games.name(:uno) == "UNO"
   end
+
+  test "a playable game names its rules module" do
+    assert Games.module(:uno) == LanParty.Uno.Rules
+    assert Games.module(:quiplash) == nil
+    assert Games.module(:chess) == nil
+  end
 end

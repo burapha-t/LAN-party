@@ -1,8 +1,9 @@
 defmodule LanParty.Room do
   @moduledoc """
   The platform state for the night: who has joined, the game the table picked, seats, queue, house
-  rules, phases, disconnects and kicks. Knows nothing about cards: UNO actions go to
-  `LanParty.Uno.Rules`. Calls are handled one at a time in arrival order, which is what makes
+  rules, phases, disconnects and kicks. Knows nothing about cards or dice: game moves go to the
+  picked game's rules module (a `LanParty.Game`, found with `Games.module/1`). Calls are handled
+  one at a time in arrival order, which is what makes
   "first jump-in wins" automatic. See docs/uno/design.md §4–5.
   """
   use GenServer
@@ -37,7 +38,7 @@ defmodule LanParty.Room do
     do: GenServer.call(server, {:update_settings, settings})
 
   def start_game(server \\ __MODULE__), do: GenServer.call(server, :start_game)
-  def draw_for(server \\ __MODULE__, token, n), do: GenServer.call(server, {:draw_for, token, n})
+  def table_act(server \\ __MODULE__, action), do: GenServer.call(server, {:table_act, action})
   def back_to_lobby(server \\ __MODULE__), do: GenServer.call(server, :back_to_lobby)
 
   ## Reading a state (pure helpers for the LiveViews)
@@ -110,7 +111,7 @@ defmodule LanParty.Room do
   end
 
   def handle_call({:act, token, action}, _from, %{phase: :playing} = state) do
-    case Rules.apply_action(state.game, token, action) do
+    case game_module(state).apply_action(state.game, token, action) do
       {:ok, game} -> {:reply, :ok, state |> put_game(game) |> broadcast()}
       {:error, _reason} = error -> {:reply, error, state}
     end
@@ -141,7 +142,7 @@ defmodule LanParty.Room do
   def handle_call(:start_game, _from, %{phase: :lobby} = state) do
     case seated(state) do
       [_, _ | _] = players ->
-        game = Rules.new(players, state.settings, state.game_opts)
+        game = game_module(state).new(players, state.settings, state.game_opts)
         {:reply, :ok, broadcast(%{state | phase: :playing, game: game, winner: nil})}
 
       _fewer ->
@@ -151,15 +152,14 @@ defmodule LanParty.Room do
 
   def handle_call(:start_game, _from, state), do: {:reply, {:error, :not_in_lobby}, state}
 
-  def handle_call({:draw_for, token, n}, _from, %{phase: :playing} = state)
-      when is_integer(n) and n in 1..10 do
-    case Rules.draw_for(state.game, token, n) do
-      {:ok, game} -> {:reply, :ok, broadcast(%{state | game: game})}
+  def handle_call({:table_act, action}, _from, %{phase: :playing} = state) do
+    case game_module(state).table_action(state.game, action) do
+      {:ok, game} -> {:reply, :ok, state |> put_game(game) |> broadcast()}
       {:error, _reason} = error -> {:reply, error, state}
     end
   end
 
-  def handle_call({:draw_for, _token, _n}, _from, state), do: {:reply, {:error, :not_now}, state}
+  def handle_call({:table_act, _action}, _from, state), do: {:reply, {:error, :not_now}, state}
 
   def handle_call(:back_to_lobby, _from, %{phase: phase} = state) when phase in [:playing, :finished] do
     state = %{state | phase: :lobby, game: nil, winner: nil} |> fill_seats()
@@ -209,7 +209,7 @@ defmodule LanParty.Room do
   end
 
   defp put_game(state, game) do
-    case Rules.winner(game) do
+    case game_module(state).winner(game) do
       nil -> %{state | game: game}
       winner -> %{state | game: game, phase: :finished, winner: winner}
     end
@@ -278,13 +278,17 @@ defmodule LanParty.Room do
     end
   end
 
-  # Last player left wins (CLAUDE.md "Disconnects").
+  # The game's rules take the player out. A winner, or one seated player left, ends the game
+  # (CLAUDE.md "Disconnects": last player left wins).
   defp remove_from_round(state, token) do
-    game = Rules.remove_player(state.game, token)
+    game = game_module(state).remove_player(state.game, token)
+    state = put_game(state, game)
 
-    case game.players do
-      [last] -> %{state | game: game, phase: :finished, winner: last}
-      _more -> %{state | game: game}
+    case {state.phase, game.players} do
+      {:playing, [last]} -> %{state | phase: :finished, winner: last}
+      _other -> state
     end
   end
+
+  defp game_module(state), do: Games.module(state.game_id)
 end

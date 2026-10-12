@@ -149,11 +149,16 @@ defmodule LanParty.RoomTest do
       assert state.winner == "t1"
     end
 
-    test "draw for player takes 1 to 10 cards", %{room: room} do
-      assert Room.draw_for(room, "t2", 0) == {:error, :not_now}
-      assert Room.draw_for(room, "t2", 11) == {:error, :not_now}
-      assert Room.draw_for(room, "t2", 2) == :ok
+    test "table controls go to the game's rules: draw for player takes 1 to 10 cards", %{room: room} do
+      assert Room.table_act(room, {:draw_for, "t2", 0}) == {:error, :bad_amount}
+      assert Room.table_act(room, {:draw_for, "t2", 11}) == {:error, :bad_amount}
+      assert Room.table_act(room, {:draw_for, "t2", 2}) == :ok
       assert length(Room.get_state(room).game.hands["t2"]) == 9
+    end
+
+    test "a table control the game doesn't know is refused, and the Room keeps going", %{room: room} do
+      assert Room.table_act(room, :roll) == {:error, :unknown_action}
+      assert Room.get_state(room).phase == :playing
     end
 
     test "back to the lobby keeps seats, fills free ones from the queue, keeps settings", %{room: room} do
@@ -170,6 +175,7 @@ defmodule LanParty.RoomTest do
     test "actions outside a round are refused", %{room: room} do
       :ok = Room.back_to_lobby(room)
       assert Room.act(room, "t1", :draw) == {:error, :not_playing}
+      assert Room.table_act(room, {:draw_for, "t2", 2}) == {:error, :not_now}
     end
   end
 end
