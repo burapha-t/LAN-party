@@ -2,10 +2,11 @@ defmodule LanPartyWeb.Uno.TableComponent do
   @moduledoc """
   UNO on the table: the lobby (house rules, Start, Change game), the round (seats, pile, draw for
   player, Reset), and the result. Rendered by `TableLive` once UNO is picked.
-  Markup follows docs/mockups/table/.
+  Markup follows docs/mockups/redesign/uno/table/.
   """
   use LanPartyWeb, :live_component
 
+  import LanPartyWeb.LobbyComponents
   import LanPartyWeb.Uno.Components
 
   alias LanParty.Room
@@ -17,13 +18,6 @@ defmodule LanPartyWeb.Uno.TableComponent do
     {:seven_zero, "7-0", "A 7 swaps hands with a player you pick. A 0 passes every hand along."},
     {:jump_in, "Jump-in", "Anyone can play an identical card out of turn. Play carries on from them."}
   ]
-
-  @doc "Class for the table's <main>: the current color glows during and after a round."
-  def main_class(%{phase: phase, game: %{color: color}})
-      when phase in [:playing, :finished] and not is_nil(color),
-      do: "tv glow-#{color}"
-
-  def main_class(_room), do: "tv"
 
   @impl true
   def update(%{id: id, room: room}, socket) do
@@ -122,9 +116,12 @@ defmodule LanPartyWeb.Uno.TableComponent do
       phx-value-token={@token}
       phx-target={@target}
     >
-      <span class="name">{Room.name(@room, @token)}</span>
+      <.avatar room={@room} token={@token} />
+      <span class="who">
+        <span class="name">{Room.name(@room, @token)}</span>
+        <span :if={away?(@room, @token)} class="pill"><span class="dot sun"></span>Away</span>
+      </span>
       <span class="count">{@count}<small>{if @count == 1, do: "card", else: "cards"}</small></span>
-      <span :if={away?(@room, @token)} class="tag">Away</span>
     </a>
     """
   end
@@ -138,21 +135,13 @@ defmodule LanPartyWeb.Uno.TableComponent do
       <%= case @room.phase do %>
         <% :lobby -> %>
           <header class="tv-head">
-            <span class="game-name">UNO</span>
-            <button class="btn btn-secondary" phx-click="change_game" phx-target={@myself}>Change game</button>
+            <span class="wordmark">UNO</span>
+            <button class="btn btn-quiet" phx-click="change_game" phx-target={@myself}>Change game</button>
           </header>
           <div class="lobby">
-            <section>
-              <h2>Players</h2>
-              <ul class="people">
-                <li :for={token <- @seated}>{Room.name(@room, token)}</li>
-              </ul>
-              <p :if={length(@seated) >= 2} class="lobby-note">{length(@seated)} of 8 seats taken.</p>
-              <p :if={length(@seated) < 2} class="lobby-note"><span class="wait">Waiting for players to join</span></p>
-              <p :if={@queued != []} class="lobby-note">Waiting for a seat: {Enum.join(names(@room, @queued), ", ")}</p>
-            </section>
-            <section>
-              <h2>House rules</h2>
+            <.players_panel room={@room} />
+            <section class="panel">
+              <div class="panel-head"><h2>House rules</h2></div>
               <div class="rules">
                 <label :for={{key, title, help} <- @rules} class="rule" for={"rule-#{key}"}>
                   <span><b>{title}</b><small>{help}</small></span>
@@ -170,21 +159,16 @@ defmodule LanPartyWeb.Uno.TableComponent do
             </section>
           </div>
           <div class="start-row">
-            <button
-              class="btn btn-primary btn-big"
-              phx-click="start"
-              phx-target={@myself}
-              disabled={length(@seated) < 2}
-            >
-              Start game
-            </button>
             <p :if={length(@seated) < 2}>Start needs at least 2 players.</p>
             <p :if={@error} role="alert">{@error}</p>
+            <button class="btn btn-big" phx-click="start" phx-target={@myself} disabled={length(@seated) < 2}>
+              Start game
+            </button>
           </div>
         <% :playing -> %>
           <header class="tv-head">
-            <span class="game-name">UNO</span>
-            <button class="btn btn-secondary" phx-click="ask_reset" phx-target={@myself}>Reset</button>
+            <span class="wordmark">UNO</span>
+            <button class="btn btn-quiet" phx-click="ask_reset" phx-target={@myself}>Reset</button>
           </header>
           <div class="ring">
             <div class={["seats", length(@top_row) > 3 && "four"]}>
@@ -197,7 +181,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
                 target={@myself}
               />
             </div>
-            <div class="table-mid">
+            <div class={["felt", @view.color && "felt-#{@view.color}"]}>
               <div class="draw-pile">
                 <span class="card black stack" role="img" aria-label="Draw pile"><span class="face" aria-hidden="true"><span class="oval back-oval"></span><span class="logo">UNO</span></span></span>
                 <span>{@view.draw_pile_size} cards</span>
@@ -209,8 +193,10 @@ defmodule LanPartyWeb.Uno.TableComponent do
                   <b>+{@view.pending_total}</b> for {Room.name(@room, @view.current)}
                 </p>
                 <p class="facts">
-                  <span>Color: {@view.color || "not picked yet"}</span>
-                  <span>
+                  <span class="pill">
+                    <span :if={@view.color} class={["dot", @view.color]}></span>Color: {@view.color || "not picked yet"}
+                  </span>
+                  <span class="pill">
                     <svg aria-hidden="true" style={@view.direction == -1 && "transform: scaleX(-1)"}>
                       <use href="#clockwise" />
                     </svg>{if @view.direction == 1, do: "Clockwise", else: "Counterclockwise"}
@@ -230,7 +216,11 @@ defmodule LanPartyWeb.Uno.TableComponent do
             </div>
           </div>
           <footer class="tv-foot">
-            <span :if={@queued != []}>Next game: <strong>{Enum.join(names(@room, @queued), ", ")}</strong></span>
+            <span :if={@queued != []} class="next">
+              Next game:
+              <span class="faces" aria-hidden="true"><.avatar :for={token <- @queued} room={@room} token={token} /></span>
+              <strong>{Enum.join(names(@room, @queued), ", ")}</strong>
+            </span>
             <span :if={@queued == []}></span>
             <span>Tap a player to make them draw.</span>
           </footer>
@@ -245,8 +235,8 @@ defmodule LanPartyWeb.Uno.TableComponent do
               </div>
               <p>2 cards is the penalty for not saying UNO.</p>
               <div class="buttons">
-                <button class="btn btn-secondary" phx-click="cancel" phx-target={@myself}>Cancel</button>
-                <button class="btn btn-primary" phx-click="confirm_draw_for" phx-target={@myself}>Draw</button>
+                <button class="btn btn-quiet" phx-click="cancel" phx-target={@myself}>Cancel</button>
+                <button class="btn" phx-click="confirm_draw_for" phx-target={@myself}>Draw</button>
               </div>
             </div>
           </div>
@@ -256,22 +246,22 @@ defmodule LanPartyWeb.Uno.TableComponent do
               <h2 id="dlg">End this round?</h2>
               <p>Nobody wins, and everyone goes back to the lobby.</p>
               <div class="buttons">
-                <button class="btn btn-secondary" phx-click="cancel" phx-target={@myself}>Cancel</button>
-                <button class="btn btn-primary" phx-click="back_to_lobby" phx-target={@myself}>End round</button>
+                <button class="btn btn-quiet" phx-click="cancel" phx-target={@myself}>Cancel</button>
+                <button class="btn" phx-click="back_to_lobby" phx-target={@myself}>End round</button>
               </div>
             </div>
           </div>
         <% :finished -> %>
-          <header class="tv-head"><span class="game-name">UNO</span></header>
+          <header class="tv-head"><span class="wordmark">UNO</span></header>
           <section class="winner">
             <.card card={@view.top} />
             <h1>{Room.name(@room, @room.winner) || "Someone"} won</h1>
             <p class="leftovers">
               <span>Cards left</span>
-              <span :for={{token, count} <- @leftovers}>{Room.name(@room, token)} <b>{count}</b></span>
+              <span :for={{token, count} <- @leftovers} class="pill">{Room.name(@room, token)} <b>{count}</b></span>
             </p>
             <div class="buttons">
-              <button class="btn btn-primary btn-big" phx-click="back_to_lobby" phx-target={@myself}>Play again</button>
+              <button class="btn btn-big" phx-click="back_to_lobby" phx-target={@myself}>Play again</button>
             </div>
             <p :if={@queued != []} class="lobby-note">{join_note(names(@room, @queued))}</p>
           </section>

@@ -1,9 +1,12 @@
 defmodule LanPartyWeb.PlayerLive do
   @moduledoc """
   The phone at `/`: join once per night, wait for the table to pick a game, then that game's phone
-  screens. See docs/uno/design.md §2 and §4. Markup follows docs/mockups/phone/.
+  screens. See docs/uno/design.md §2 and §4. Markup follows docs/mockups/platform/phone/; the header
+  bar follows docs/mockups/redesign/.
   """
   use LanPartyWeb, :live_view
+
+  import LanPartyWeb.LobbyComponents
 
   alias LanParty.{Games, Room}
 
@@ -44,19 +47,20 @@ defmodule LanPartyWeb.PlayerLive do
       room: room,
       me: me,
       kicked?: Map.has_key?(room.kicked, socket.assigns.token),
-      brand: if(me && room.game_id, do: Games.name(room.game_id), else: "LAN Party"),
-      glow: if(me && room.game_id == :uno, do: LanPartyWeb.Uno.PlayerComponent.glow(room, socket.assigns.token))
+      brand: if(me && room.game_id, do: Games.name(room.game_id), else: "LAN Party")
     )
   end
 
   @impl true
   def render(assigns) do
     ~H"""
-    <main class={["phone", @glow]}>
+    <main class="phone">
       <header class="bar">
-        <span :if={@me}>Playing as <strong>{@me.name}</strong></span>
+        <span :if={@me} class="me">
+          <.avatar room={@room} token={@token} /><span>Playing as <strong>{@me.name}</strong></span>
+        </span>
         <span :if={!@me}></span>
-        <span class="brand">{@brand}</span>
+        <span class="wordmark">{@brand}</span>
       </header>
 
       <div :if={!@me} class="message">
@@ -77,7 +81,7 @@ defmodule LanPartyWeb.PlayerLive do
             aria-describedby={@error && "name-error"}
           />
           <p :if={@error} class="field-error" id="name-error">{@error}</p>
-          <button class="btn btn-primary" type="submit">Join</button>
+          <button class="btn" type="submit">Join</button>
         </form>
       </div>
 

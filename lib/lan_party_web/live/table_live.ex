@@ -47,8 +47,7 @@ defmodule LanPartyWeb.TableLive do
   defp assign_room(socket, room) do
     assign(socket,
       room: room,
-      main_class:
-        if(is_nil(room.game_id), do: "tv shelf-room", else: LanPartyWeb.Uno.TableComponent.main_class(room)),
+      main_class: if(is_nil(room.game_id), do: "tv shelf-room", else: "tv"),
       unbuilt: Enum.reject(Games.all(), & &1.playable?),
       spines: @spines
     )
@@ -62,7 +61,7 @@ defmodule LanPartyWeb.TableLive do
     ~H"""
     <main class={@main_class}>
       <%= if is_nil(@room.game_id) do %>
-        <header class="tv-head"><span class="brand">LAN Party</span></header>
+        <header class="tv-head"><span class="wordmark">LAN Party</span></header>
         <div>
           <h1>Select the game</h1>
           <p class="joined">{joined(@room)}</p>
@@ -84,7 +83,7 @@ defmodule LanPartyWeb.TableLive do
             <div class="shelf-aside">
               <h2>UNO</h2>
               <p>The card game. Match the color or the number, and be the first to empty your hand.</p>
-              <button class="btn btn-primary btn-big" phx-click="pick_game" phx-value-id="uno">Play UNO</button>
+              <button class="btn btn-big" phx-click="pick_game" phx-value-id="uno">Play UNO</button>
             </div>
           </div>
           <div class="plank"></div>
