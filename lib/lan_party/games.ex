@@ -6,7 +6,7 @@ defmodule LanParty.Games do
 
   @games [
     %{id: :uno, name: "UNO", playable?: true, module: LanParty.Uno.Rules},
-    %{id: :liars_dice, name: "Liar's Dice", playable?: false},
+    %{id: :liars_dice, name: "Liar's Dice", playable?: true, module: LanParty.LiarsDice.Rules},
     %{id: :quiplash, name: "Quiplash", playable?: false},
     %{id: :paranoia, name: "Paranoia", playable?: false},
     %{id: :who_wrote_it, name: "Who wrote it?", playable?: false},
