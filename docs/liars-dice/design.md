@@ -1,8 +1,9 @@
 # Liar's Dice: design spec
 
 - **Date:** 2026-10-12
-- **Status:** Written 2026-10-12, waiting for the user's review. No code until the implementation plan
-  is approved.
+- **Status:** Written 2026-10-12. The user started implementation the same day, which approved it.
+  Built from `plan.md`. The screens follow the redesign mockups (`docs/mockups/redesign/liars-dice/`), which
+  replace the original mockups and the CSS notes below (§2 item 13, §3 "CSS").
 - **Mockups:** `docs/mockups/` (static HTML) shows every screen in §2: the files in
   `liars-dice/phone/` and `liars-dice/table/`, plus the updated game shelf `platform/table/index.html`. Build the screens to match them.
 - **Inputs:** `CLAUDE.md` (platform), `docs/liars-dice/README.md` (rules and product decisions) and

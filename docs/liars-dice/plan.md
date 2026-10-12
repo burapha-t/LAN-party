@@ -205,7 +205,7 @@ end
   - After every phone action, table action and kick, the Room asks `module.winner/1`; a winner sets
     `phase: :finished, winner: token`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 In `test/lan_party/games_test.exs`, add:
 
@@ -258,12 +258,12 @@ And in the test `"actions outside a round are refused"`, add a last line:
       assert Room.table_act(room, {:draw_for, "t2", 2}) == {:error, :not_now}
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `mix test test/lan_party/games_test.exs test/lan_party/uno/rules_leave_test.exs test/lan_party/room_test.exs`
 Expected: FAIL. `Games.module/1`, `Rules.table_action/2` and `Room.table_act/2` are undefined.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `lib/lan_party/games.ex`: give UNO its module and add `module/1`. Liar's Dice stays unplayable until
 Task 4. Replace the moduledoc and the UNO entry, and add the function:
@@ -353,13 +353,13 @@ nothing else in the file): in `handle_event("confirm_draw_for", …)`, replace
 `Room.table_act({:draw_for, socket.assigns.draw_for, socket.assigns.amount})`.
 `test/lan_party_web/live/uno_table_test.exs` already covers that panel end to end.
 
-- [ ] **Step 4: Run all the tests**
+- [x] **Step 4: Run all the tests**
 
 Run: `mix test` then `mix compile --warnings-as-errors`
 Expected: all pass (147 + 4 new = 151), no warnings. `grep -rn "draw_for(" lib test` finds only
 `Uno.Rules.draw_for/3` and its tests.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 git add lib/lan_party/games.ex lib/lan_party/room.ex lib/lan_party/uno/rules.ex lib/lan_party_web/live/uno/table_component.ex test/lan_party/games_test.exs test/lan_party/room_test.exs test/lan_party/uno/rules_leave_test.exs
@@ -384,7 +384,7 @@ git commit -m "feat: the Room forwards moves to the picked game's rules module" 
   - `LanParty.LiarsDice.View.player_view(game, token) :: %{dice: [1..6], roll: pos_integer, face: nil | 2..6, out?: boolean}`
   - `LanParty.LiarsDice.View.table_view(game) :: %{counts: [{token, non_neg_integer}] (seat order), total: non_neg_integer, face: nil | 2..6, roll: pos_integer}`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `test/lan_party/liars_dice/rules_test.exs`:
 
@@ -554,12 +554,12 @@ defmodule LanParty.LiarsDice.ViewTest do
 end
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `mix test test/lan_party/liars_dice`
 Expected: FAIL. `LanParty.LiarsDice.Rules` is undefined.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `lib/lan_party/liars_dice/rules.ex`:
 
@@ -666,12 +666,12 @@ defmodule LanParty.LiarsDice.View do
 end
 ```
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `mix test test/lan_party/liars_dice`, then `mix test` and `mix compile --warnings-as-errors`.
 Expected: PASS, no warnings.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 mix format lib/lan_party/liars_dice/rules.ex lib/lan_party/liars_dice/view.ex test/lan_party/liars_dice/rules_test.exs test/lan_party/liars_dice/view_test.exs
@@ -692,7 +692,7 @@ git commit -m "feat: Liar's Dice rules and views" -m "Co-Authored-By: Claude Son
   - `LanPartyWeb.LiarsDice.Components.face/1`: attrs `value` (1..6, required), `class` (default nil), plus global attrs (e.g. `style`). Renders `<span class="pips nV [class]"><i></i>×V</span>`.
   - `LanPartyWeb.LiarsDice.Components.die/1`: attrs `id` (default nil), `value` (required), `rolling` (boolean, default false), `state` (nil | "lit" | "dim"). Renders `<span id class="die vV [rolling] [state]" role="img" aria-label="V"><span class="cube" aria-hidden="true">` six faces with classes `s1`..`s6` `</span></span>`, matching `docs/mockups/redesign/liars-dice/phone/dice.html`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 `test/lan_party_web/live/liars_dice/components_test.exs`:
 
@@ -760,12 +760,12 @@ defmodule LanPartyWeb.LiarsDice.ComponentsTest do
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `mix test test/lan_party_web/live/liars_dice/components_test.exs`
 Expected: FAIL. `LanPartyWeb.LiarsDice.Components` is undefined.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `lib/lan_party_web/live/liars_dice/components.ex`:
 
@@ -810,7 +810,7 @@ defmodule LanPartyWeb.LiarsDice.Components do
 end
 ```
 
-- [ ] **Step 4: Run the tests to verify they pass**
+- [x] **Step 4: Run the tests to verify they pass**
 
 Run: `mix test test/lan_party_web/live/liars_dice/components_test.exs`, then `mix test` and
 `mix compile --warnings-as-errors`.
@@ -818,7 +818,7 @@ Expected: PASS, no warnings. If `rendered_to_string` puts different whitespace i
 attribute, fix the component, not the test: the class strings must be exactly as asserted, since the
 LiveView tests in Tasks 5–6 select on them.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 mix format lib/lan_party_web/live/liars_dice/components.ex test/lan_party_web/live/liars_dice/components_test.exs
@@ -840,7 +840,7 @@ Starts after the orchestrator has merged Tasks 1–3 into `liars-dice` and fast-
 - Consumes: Task 1's `Room.table_act/2` and `Games.module/1`; Task 2's `LiarsDice.Rules`.
 - Produces: `Games.playable?(:liars_dice) == true`, `Games.module(:liars_dice) == LanParty.LiarsDice.Rules`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 In `test/lan_party/games_test.exs`, rename the first test to
 `"all 8 games from CLAUDE.md, in order; UNO and Liar's Dice are playable"`, add
@@ -957,12 +957,12 @@ defmodule LanParty.RoomLiarsDiceTest do
 end
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `mix test test/lan_party/games_test.exs test/lan_party/room_liars_dice_test.exs`
 Expected: FAIL. `pick_game(:liars_dice)` returns `{:error, :not_playable}`.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 In `lib/lan_party/games.ex`, change the Liar's Dice entry to:
 
@@ -970,13 +970,13 @@ In `lib/lan_party/games.ex`, change the Liar's Dice entry to:
     %{id: :liars_dice, name: "Liar's Dice", playable?: true, module: LanParty.LiarsDice.Rules},
 ```
 
-- [ ] **Step 4: Run all the tests**
+- [x] **Step 4: Run all the tests**
 
 Run: `mix test` and `mix compile --warnings-as-errors`.
 Expected: PASS. Note: `test/lan_party_web/live/table_live_test.exs` doesn't list Liar's Dice among the
 spines, so it still passes even though the Liar's Dice spine is gone.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 mix format test/lan_party/room_liars_dice_test.exs
@@ -1008,7 +1008,7 @@ Screens (copy and markup: `docs/mockups/redesign/liars-dice/table/*.html`):
 | `:playing` | `.tv-head`: wordmark and `button.btn.btn-quiet` "Reset". `.ring`: the top row of seats, `.felt.felt-dice` (total, face picker, Roll), the bottom row. `.tv-foot`: the queue ("Next game:" with avatars and names) and "Tap a player to take a die." (or the error). Plus the take-a-die and reset panels. |
 | `:finished` | `.tv-head` with the wordmark only. `section.winner`: the winner's avatar, "Alice won", "Last one with dice", `button.btn.btn-big` "Play again", and the join note. |
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `test/lan_party_web/live/liars_dice_table_test.exs`:
 
@@ -1282,12 +1282,12 @@ defmodule LanPartyWeb.LiarsDiceTableTest do
 end
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `mix test test/lan_party_web/live/liars_dice_table_test.exs`
 Expected: FAIL (the table renders nothing for Liar's Dice; no shelf box).
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `lib/lan_party_web/live/liars_dice/table_component.ex`:
 
@@ -1596,14 +1596,14 @@ end
 
 Don't change `main_class`: it's already `"tv"` for every picked game.
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `mix test test/lan_party_web/live/liars_dice_table_test.exs`, then `mix test` and
 `mix compile --warnings-as-errors`.
 Expected: PASS. If a test fails because of `LobbyComponents` markup, report it to the orchestrator
 instead of editing `lobby_components.ex`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 mix format lib/lan_party_web/live/liars_dice/table_component.ex test/lan_party_web/live/liars_dice_table_test.exs
@@ -1644,7 +1644,7 @@ elements and the CSS animation plays. The component remembers the roll it first 
 adds `rolling` only when `view.roll > seen_roll`. Outside a game `seen_roll` resets to 0, so the first
 roll of the next game animates even on a phone that was opened mid-game.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `test/lan_party_web/live/liars_dice_phone_test.exs`:
 
@@ -1809,12 +1809,12 @@ defmodule LanPartyWeb.LiarsDicePhoneTest do
 end
 ```
 
-- [ ] **Step 2: Run the tests to verify they fail**
+- [x] **Step 2: Run the tests to verify they fail**
 
 Run: `mix test test/lan_party_web/live/liars_dice_phone_test.exs`
 Expected: FAIL (the phone renders nothing for Liar's Dice).
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `lib/lan_party_web/live/liars_dice/player_component.ex`:
 
@@ -1937,14 +1937,14 @@ item 11: a Liar's Dice game has many rounds, so "game" fits both games): change
 Then run `grep -rn "this round to end" test lib`; if a UNO test asserts the old text, update that one
 string.
 
-- [ ] **Step 4: Run the tests**
+- [x] **Step 4: Run the tests**
 
 Run: `mix test test/lan_party_web/live/liars_dice_phone_test.exs`, then `mix test` and
 `mix compile --warnings-as-errors`.
 Expected: PASS. If a test fails because of `LobbyComponents` markup, report it to the orchestrator
 instead of changing `lobby_components.ex` beyond the wording.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```powershell
 mix format lib/lan_party_web/live/liars_dice/player_component.ex test/lan_party_web/live/liars_dice_phone_test.exs
@@ -1956,12 +1956,12 @@ git commit -m "feat: Liar's Dice on the phone" -m "Co-Authored-By: Claude Sonnet
 
 ### Task 7 (orchestrator): check, document, hand over
 
-- [ ] **Step 1:** If `main` has moved on (the UNO session keeps working there), merge it into
+- [x] **Step 1:** If `main` has moved on (the UNO session keeps working there), merge it into
   `liars-dice` and resolve conflicts in `player_live.ex` / `table_live.ex` by keeping both sides.
-- [ ] **Step 2:** `mix test`, `mix compile --warnings-as-errors`.
-- [ ] **Step 3:** Visual check: run the server and compare each Liar's Dice screen with
+- [x] **Step 2:** `mix test`, `mix compile --warnings-as-errors`.
+- [x] **Step 3:** Visual check: run the server and compare each Liar's Dice screen with
   `docs/mockups/redesign/liars-dice/` (headless screenshots at phone and TV sizes). Send any CSS fix to
   the UNO session.
-- [ ] **Step 4:** Docs: `docs/liars-dice/README.md` and `design.md` status, `CLAUDE.md` status and the
+- [x] **Step 4:** Docs: `docs/liars-dice/README.md` and `design.md` status, `CLAUDE.md` status and the
   Games table. Tick this plan's boxes.
 - [ ] **Step 5:** Ask the user before merging `liars-dice` into `main`.

@@ -5,7 +5,8 @@ The second game on the LAN Party platform. Read the root `CLAUDE.md` first for t
 
 - **How to get here:** Liar's Dice has no URL of its own. Players stay on `/`; the table opens `/table`
   and picks Liar's Dice from "Select the game", and every phone switches to it on its own.
-- **Status:** Design spec written in `design.md` (2026-10-12), waiting for review. No code yet.
+- **Status:** Built 2026-10-12 from `plan.md` (spec: `design.md`), styled on the redesign mockups in
+  `docs/mockups/redesign/liars-dice/`. Not yet tried on real devices.
 
 ## Rule mode: free-form
 
