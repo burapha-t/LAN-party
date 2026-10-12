@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pick a color (phone)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&family=Nunito:wght@700;800;900&family=Rubik:ital,wght@1,900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="skip" viewBox="0 0 100 100">
+    <g fill="none" stroke-linecap="round">
+      <circle cx="50" cy="50" r="31" stroke="#000" stroke-width="23"/>
+      <line x1="29" y1="71" x2="71" y2="29" stroke="#000" stroke-width="23"/>
+      <circle cx="50" cy="50" r="31" stroke="currentColor" stroke-width="13"/>
+      <line x1="29" y1="71" x2="71" y2="29" stroke="currentColor" stroke-width="13"/>
+    </g>
+  </symbol>
+  <symbol id="reverse" viewBox="0 0 100 100">
+    <g transform="rotate(-45 50 50)" fill="currentColor" stroke="#000" stroke-width="6" stroke-linejoin="round" paint-order="stroke">
+      <polygon points="14,27 56,27 56,15 84,34 56,53 56,41 14,41"/>
+      <polygon points="86,59 44,59 44,47 16,66 44,85 44,73 86,73"/>
+    </g>
+  </symbol>
+</svg>
+<main class="phone">
+<header class="bar"><span class="me"><span class="avatar p5" aria-hidden="true">E</span><span>Playing as <strong>Erin</strong></span></span><span class="wordmark">UNO</span></header>
+<div class="stage"><p class="your-turn">Your turn</p><p class="stage-hint">Match the top card on the table.</p></div>
+<section class="tray" aria-label="Your hand"><div class="hand"><a class="card red" href="turn-alice.html" aria-label="Red 2"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><span>2</span></span><span class="idx">2</span><span class="idx br">2</span></span></a><a class="card red" href="turn-alice.html" aria-label="Red skip"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><svg><use href="#skip"/></svg></span><span class="idx"><svg><use href="#skip"/></svg></span><span class="idx br"><svg><use href="#skip"/></svg></span></span></a><a class="card yellow" href="no-match.html" aria-label="Yellow 4"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><span>4</span></span><span class="idx">4</span><span class="idx br">4</span></span></a><a class="card yellow" href="pick-swap.html" aria-label="Yellow 7"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><span>7</span></span><span class="idx">7</span><span class="idx br">7</span></span></a><a class="card green" href="no-match.html" aria-label="Green 0"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><span>0</span></span><span class="idx">0</span><span class="idx br">0</span></span></a><a class="card green" href="no-match.html" aria-label="Green 9"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big u"><span>9</span></span><span class="idx">9</span><span class="idx br">9</span></span></a><a class="card blue" href="no-match.html" aria-label="Blue 5"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><span>5</span></span><span class="idx">5</span><span class="idx br">5</span></span></a><a class="card blue" href="no-match.html" aria-label="Blue reverse"><span class="face" aria-hidden="true"><span class="oval"></span><span class="big"><svg><use href="#reverse"/></svg></span><span class="idx"><svg><use href="#reverse"/></svg></span><span class="idx br"><svg><use href="#reverse"/></svg></span></span></a><a class="card blue" href="no-match.html" aria-label="Blue +2"><span class="face" aria-hidden="true"><span class="oval"></span><span class="mini" style="--dx:calc(var(--cw)*-0.06);--dy:calc(var(--cw)*0.06)"></span><span class="mini" style="--dx:calc(var(--cw)*0.06);--dy:calc(var(--cw)*-0.06)"></span><span class="idx">+2</span><span class="idx br">+2</span></span></a><a class="card black" href="pick-color.html" aria-label="Wild"><span class="face" aria-hidden="true"><span class="oval quad"></span><span class="idx"><span class="dot4"></span></span><span class="idx br"><span class="dot4"></span></span></span></a><a class="card black" href="pick-color.html" aria-label="Wild +4"><span class="face" aria-hidden="true"><span class="oval"></span><span class="mini" style="--mc:var(--yellow);--dx:calc(var(--cw)*-0.14);--dy:calc(var(--cw)*0.11)"></span><span class="mini" style="--mc:var(--green);--dx:calc(var(--cw)*-0.05);--dy:calc(var(--cw)*0.04)"></span><span class="mini" style="--mc:var(--blue);--dx:calc(var(--cw)*0.04);--dy:calc(var(--cw)*-0.03)"></span><span class="mini" style="--mc:var(--red);--dx:calc(var(--cw)*0.13);--dy:calc(var(--cw)*-0.1)"></span><span class="idx">+4</span><span class="idx br">+4</span></span></a></div><div class="actions"><a class="btn btn-white" href="drew-card.html">Draw</a></div></section>
+<div class="scrim"></div>
+<section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title"><h2 id="sheet-title">Pick a color</h2><div class="swatches"><a class="swatch red" href="turn-alice.html">Red</a><a class="swatch yellow" href="turn-alice.html">Yellow</a><a class="swatch green" href="turn-alice.html">Green</a><a class="swatch blue" href="turn-alice.html">Blue</a></div><a class="btn btn-quiet" href="turn-mine.html">Cancel</a></section>
+</main>
+</body>
+</html>

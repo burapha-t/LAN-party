@@ -29,6 +29,7 @@ see "Where things live".
 | `docs/uno/plan.md` | Implementation plan for the first build: 13 tasks, test-first |
 | `docs/liars-dice/` | Everything about Liar's Dice. **Read `docs/liars-dice/README.md` before working on it.** `design.md` is its spec, including the platform changes for a second game |
 | `docs/mockups/` | Static HTML mockups of every phone and table screen, grouped by game: `<game>/phone/`, `<game>/table/`, plus `platform/` for the screens every game shares (join, waiting, phone lobby, queue, reconnecting, the game picker); shared `style.css`. Build the real screens to match them |
+| `docs/mockups/redesign/` | Redesign pass (ink outlines, hard offset shadows, buttons that press down), with its own `style.css`. UNO and Liar's Dice screens are done, in `uno/` and `liars-dice/` with the same file names as the originals. The platform screens aren't redone yet, so it hasn't replaced the originals |
 | `lib/`, `test/`, ... | The Phoenix project (platform + UNO), hand-written without `mix phx.new`; layout in `docs/uno/design.md` §3 |
 | `.superpowers/sdd/plan/` | The implementing session's ledger (`progress.md`: rulings, deferred items) and code reviews |
 
