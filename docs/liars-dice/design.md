@@ -46,7 +46,7 @@ showing anyone's dice on the table.
 
 | Phase | What the table shows |
 |---|---|
-| Select the game | The shelf now has a **Liar's Dice box** next to UNO's, in place of its "Not built yet" spine. Tapping a box selects it (it grows and lights up); the side panel's **Play** button picks it (changed 2026-10-12, see CLAUDE.md "Decisions"). Mockup: `platform/table/index.html`. |
+| Select the game | The shelf now has a **Liar's Dice box** next to UNO's, in place of its "Not built yet" spine. Playable games start as lit spines; tapping one selects it (it grows into its box and lights up) and the other stays a spine; the side panel's **Play** button picks it (changed 2026-10-12, see CLAUDE.md "Decisions"). Mockup: `platform/table/index.html`. |
 | Liar's Dice lobby | Joined players, the queue, "Everyone starts with 5 dice.", **Start game** (disabled with fewer than 2 players), **Change game**. No house rules. Mockup: `liars-dice/table/lobby.html`. |
 | Playing | Every player with their dice count ("4 dice", "1 die"); *away* tag on disconnected players; players with no dice greyed out and tagged **Out**. In the middle: the total ("15 dice in play"), the face picker (2 to 6, drawn as dice faces) with "Someone called "Liar!"? Pick the face that was bid.", and **Roll**. Footer: the queue ("Next game: Gus, Hana") and "Tap a player to take a die." **Reset** in the header. Mockup: `liars-dice/table/playing.html`. |
 | Counting | The picked face is raised and outlined; the line reads "Counting **4s**. 1s are wild. Count the phones out loud." No number. Mockup: `liars-dice/table/count.html`. |

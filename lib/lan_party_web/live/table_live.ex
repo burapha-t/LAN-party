@@ -61,8 +61,7 @@ defmodule LanPartyWeb.TableLive do
     )
   end
 
-  # A game box grows when tapped, and goes back on the shelf as a spine while another is selected.
-  defp box_state(_id, nil), do: nil
+  # A game stands on the shelf as a spine until it's tapped; then it grows into its full box.
   defp box_state(id, id), do: "selected"
   defp box_state(_id, _selected), do: "shelved"
 
@@ -94,7 +93,9 @@ defmodule LanPartyWeb.TableLive do
                 <.card card={%Card{id: 0, color: nil, value: :wild}} style="--r:16deg;--x:42%" />
               </span>
               <span class="box-tag">2 to 8 players</span>
-              <span class="box-spine" aria-hidden="true"><b>UNO</b><small>2 to 8 players</small></span>
+              <span class="box-spine" aria-hidden="true">
+                <b>UNO</b><small>2 to 8 players</small>
+              </span>
             </a>
             <a
               class={["box-dice", box_state(:liars_dice, @selected)]}

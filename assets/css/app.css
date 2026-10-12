@@ -1060,7 +1060,7 @@ ul { padding: 0; list-style: none; }
     height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
     transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
     box-shadow 0.2s;
-  /* Its size as a spine, while another game is selected. */
+  /* Its size as a spine, until it is tapped. */
   --spine-w: max(46px, 5vw);
   --spine-h: 90%;
 }
@@ -1094,7 +1094,7 @@ ul { padding: 0; list-style: none; }
   transform: scale(1.08);
   box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 0 4px var(--paper), 0 0 calc(var(--shelf-h) * 0.07) rgb(255 214 160 / 0.4);
 }
-/* The box not tapped: back on the shelf as a spine, but at full brightness, unlike the unbuilt games. */
+/* A game not tapped stands on the shelf as a spine, but at full brightness, unlike the unbuilt games. */
 .box-uno.shelved,
 .box-dice.shelved { width: var(--spine-w); height: var(--spine-h); }
 .box-uno.shelved > *,
@@ -1112,7 +1112,7 @@ ul { padding: 0; list-style: none; }
   transition-delay: 0s;
 }
 .box-uno.shelved .box-spine,
-.box-dice.shelved .box-spine { opacity: 1; transition-delay: 0.15s; }
+.box-dice.shelved .box-spine { opacity: 1; transition-delay: 0.25s; }
 
 .box-dice { --spine-h: 84%; background: linear-gradient(105deg, rgb(255 255 255 / 0.16), transparent 40%), #8a3340; }
 .box-dice .box-logo {
