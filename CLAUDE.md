@@ -202,6 +202,7 @@ None right now.
 | Liar's Dice: 1s are wild | User's choice (2026-10-12): the classic rule; why the face picker goes 2 to 6 |
 | Liar's Dice: the table takes one die from whoever lost the challenge (confirm panel, no undo); 0 dice = out; last player with dice wins | User's rule (2026-10-12); the panel is the confirm step, like UNO's "draw for player" |
 | A second game → the Room hands moves to the picked game through a small shared interface (`LanParty.Game`) | Planned in the UNO spec for when a second game arrives; details in `docs/liars-dice/design.md` §3 |
+| Table game picker: tapping a box only selects it (it grows and lights up, on that table device only); the side panel's Play button picks the game. Supersedes "tapping a box picks the game" and the mockup `platform/table/index.html` | User's choice (2026-10-12): both boxes looked lit at once; one clear choice before everyone's phone switches |
 | Liar's Dice is styled on the redesign (`docs/mockups/redesign/liars-dice/`): no background glow, a wine-red felt | User's choice (2026-10-12): build on the new redesign, which dropped the glows (supersedes `design.md` §2 item 13) |
 
 ## Working agreements for future sessions

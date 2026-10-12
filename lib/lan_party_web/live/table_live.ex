@@ -28,10 +28,16 @@ defmodule LanPartyWeb.TableLive do
       Process.monitor(Room)
     end
 
-    {:ok, assign_room(socket, Room.get_state())}
+    {:ok, socket |> assign(selected: nil) |> assign_room(Room.get_state())}
   end
 
+  # Tapping a box only selects it on this device; the side panel's Play button picks the game.
   @impl true
+  def handle_event("select_game", %{"id" => id}, socket) do
+    game = Enum.find(Games.all(), &(&1.playable? and Atom.to_string(&1.id) == id))
+    {:noreply, assign(socket, selected: game && game.id)}
+  end
+
   def handle_event("pick_game", %{"id" => id}, socket) do
     case Enum.find(Games.all(), &(Atom.to_string(&1.id) == id)) do
       %{id: game_id} -> Room.pick_game(game_id)
@@ -49,6 +55,7 @@ defmodule LanPartyWeb.TableLive do
     assign(socket,
       room: room,
       main_class: if(is_nil(room.game_id), do: "tv shelf-room", else: "tv"),
+      selected: if(is_nil(room.game_id), do: socket.assigns.selected),
       unbuilt: Enum.reject(Games.all(), & &1.playable?),
       spines: @spines
     )
@@ -69,7 +76,12 @@ defmodule LanPartyWeb.TableLive do
         </div>
         <section class="shelf" aria-label="Games">
           <div class="shelf-row">
-            <a class="box-uno" phx-click="pick_game" phx-value-id="uno" aria-label="UNO, 2 to 8 players">
+            <a
+              class={["box-uno", @selected == :uno && "selected"]}
+              phx-click="select_game"
+              phx-value-id="uno"
+              aria-label="UNO, 2 to 8 players"
+            >
               <span class="box-logo" aria-hidden="true">UNO</span>
               <span class="box-fan" aria-hidden="true">
                 <.card card={%Card{id: 0, color: :red, value: 7}} style="--r:-16deg;--x:-42%" />
@@ -78,7 +90,12 @@ defmodule LanPartyWeb.TableLive do
               </span>
               <span class="box-tag">2 to 8 players</span>
             </a>
-            <a class="box-dice" phx-click="pick_game" phx-value-id="liars_dice" aria-label="Liar's Dice, 2 to 8 players">
+            <a
+              class={["box-dice", @selected == :liars_dice && "selected"]}
+              phx-click="select_game"
+              phx-value-id="liars_dice"
+              aria-label="Liar's Dice, 2 to 8 players"
+            >
               <span class="box-logo" aria-hidden="true">Liar's<br />Dice</span>
               <span class="box-art" aria-hidden="true">
                 <Dice.face value={1} style="--x:-58%;--y:18%;--r:-14deg" />
@@ -91,12 +108,20 @@ defmodule LanPartyWeb.TableLive do
               <b>{game.name}</b><small>Not built yet</small>
             </div>
             <div class="shelf-aside">
-              <h2>UNO</h2>
-              <p>The classic card game.</p>
-              <button class="btn" phx-click="pick_game" phx-value-id="uno">Play UNO</button>
-              <h2>Liar's Dice</h2>
-              <p>Bluff about hidden dice.</p>
-              <button class="btn" phx-click="pick_game" phx-value-id="liars_dice">Play Liar's Dice</button>
+              <%= case @selected do %>
+                <% :uno -> %>
+                  <h2>UNO</h2>
+                  <p>The classic card game.</p>
+                  <button class="btn" phx-click="pick_game" phx-value-id="uno">Play UNO</button>
+                <% :liars_dice -> %>
+                  <h2>Liar's Dice</h2>
+                  <p>Bluff about hidden dice.</p>
+                  <button class="btn" phx-click="pick_game" phx-value-id="liars_dice">
+                    Play Liar's Dice
+                  </button>
+                <% nil -> %>
+                  <p>Tap a game to choose it.</p>
+              <% end %>
             </div>
           </div>
           <div class="plank"></div>

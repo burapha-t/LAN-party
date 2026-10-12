@@ -71,7 +71,7 @@ defmodule LanPartyWeb.LiarsDiceTableTest do
       :ok
     end
 
-    test "has a Liar's Dice box instead of its spine; tapping it picks Liar's Dice", %{
+    test "has a Liar's Dice box instead of its spine; tapping it selects Liar's Dice", %{
       table: table
     } do
       assert has_element?(table, ".box-dice .box-tag", "2 to 8 players")
@@ -79,16 +79,35 @@ defmodule LanPartyWeb.LiarsDiceTableTest do
       refute has_element?(table, ".spine b", "Liar's Dice")
 
       table |> element(".box-dice") |> render_click()
+      assert has_element?(table, ".box-dice.selected")
+      refute has_element?(table, ".box-uno.selected")
+      assert Room.get_state().game_id == nil
+    end
+
+    test "the side panel shows only the tapped game, and its Play button picks it", %{
+      table: table
+    } do
+      refute has_element?(table, ".selected")
+      assert has_element?(table, ".shelf-aside p", "Tap a game to choose it.")
+      refute has_element?(table, ".shelf-aside button")
+
+      table |> element(".box-uno") |> render_click()
+      table |> element(".box-dice") |> render_click()
+      assert has_element?(table, ".shelf-aside p", "Bluff about hidden dice.")
+      refute has_element?(table, ".shelf-aside p", "The classic card game.")
+      refute has_element?(table, ".shelf-aside button", "Play UNO")
+
+      table |> element(".shelf-aside button", "Play Liar's Dice") |> render_click()
       assert Room.get_state().game_id == :liars_dice
       assert has_element?(table, ".wordmark", "Liar's Dice")
     end
 
-    test "the side panel lists both games", %{table: table} do
-      assert has_element?(table, ".shelf-aside p", "The classic card game.")
-      assert has_element?(table, ".shelf-aside p", "Bluff about hidden dice.")
-
+    test "Change game comes back with nothing selected", %{table: table} do
+      table |> element(".box-dice") |> render_click()
       table |> element(".shelf-aside button", "Play Liar's Dice") |> render_click()
-      assert Room.get_state().game_id == :liars_dice
+      table |> element("button", "Change game") |> render_click()
+
+      refute has_element?(table, ".selected")
     end
   end
 

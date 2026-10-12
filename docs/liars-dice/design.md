@@ -46,7 +46,7 @@ showing anyone's dice on the table.
 
 | Phase | What the table shows |
 |---|---|
-| Select the game | The shelf now has a **Liar's Dice box** next to UNO's, in place of its "Not built yet" spine. Tapping either box picks that game. Mockup: `platform/table/index.html`. |
+| Select the game | The shelf now has a **Liar's Dice box** next to UNO's, in place of its "Not built yet" spine. Tapping a box selects it (it grows and lights up); the side panel's **Play** button picks it (changed 2026-10-12, see CLAUDE.md "Decisions"). Mockup: `platform/table/index.html`. |
 | Liar's Dice lobby | Joined players, the queue, "Everyone starts with 5 dice.", **Start game** (disabled with fewer than 2 players), **Change game**. No house rules. Mockup: `liars-dice/table/lobby.html`. |
 | Playing | Every player with their dice count ("4 dice", "1 die"); *away* tag on disconnected players; players with no dice greyed out and tagged **Out**. In the middle: the total ("15 dice in play"), the face picker (2 to 6, drawn as dice faces) with "Someone called "Liar!"? Pick the face that was bid.", and **Roll**. Footer: the queue ("Next game: Gus, Hana") and "Tap a player to take a die." **Reset** in the header. Mockup: `liars-dice/table/playing.html`. |
 | Counting | The picked face is raised and outlined; the line reads "Counting **4s**. 1s are wild. Count the phones out loud." No number. Mockup: `liars-dice/table/count.html`. |
@@ -81,10 +81,11 @@ with.
 10. **Away players' dice still count** in the total and are rolled with everyone else's.
 11. **The shared queue screen says "Waiting for this game to end"** (UNO's said "round"). A Liar's Dice
     game has many rounds; in UNO a game is one round, so the new wording fits both.
-12. **The game shelf:** the side panel lists both playable games with one-line descriptions ("The
-    classic card game.", "Bluff about hidden dice.") and regular-size **Play** buttons. Below 1400 px
-    wide (iPads, laptops) there's no room for it next to two boxes, so it's hidden and the boxes are
-    the buttons.
+12. **The game shelf:** the side panel shows the selected game with a one-line description ("The
+    classic card game.", "Bluff about hidden dice.") and a regular-size **Play** button, or "Tap a game
+    to choose it." when nothing is selected. Below 1400 px wide (iPads, laptops) there's no room for it
+    next to two boxes, so it sits above the shelf. (Changed 2026-10-12: it used to list both games, and
+    tapping a box picked the game at once.)
 13. **Colors:** Liar's Dice screens glow dark red (`glow-dice`, the box's color) during a game and at
     the end. The lit dice use UNO's yellow, and each die's 1 pip is red, which makes the wild 1s easy to
     spot.

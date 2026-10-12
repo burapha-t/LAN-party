@@ -1019,14 +1019,15 @@ ul { padding: 0; list-style: none; }
 .shelf-room h1 { font: 800 3em/1 var(--display); }
 .shelf-room .joined { margin-top: 0.5em; color: var(--haze); font-size: 1.15em; }
 
-.shelf { margin-top: auto; }
+.shelf { position: relative; margin-top: auto; }
 .shelf-row {
   --shelf-h: clamp(240px, 46vh, 600px);
   display: flex;
   align-items: flex-end;
   gap: clamp(6px, 0.7vw, 14px);
-  height: var(--shelf-h);
-  padding: 0 clamp(12px, 2vw, 40px);
+  /* Headroom above the boxes, so the selected one can grow without being cut off. */
+  height: calc(var(--shelf-h) * 1.16);
+  padding: calc(var(--shelf-h) * 0.16) clamp(12px, 2vw, 40px) 0;
   overflow-x: auto;
 }
 .plank {
@@ -1050,8 +1051,10 @@ ul { padding: 0; list-style: none; }
   background:
     linear-gradient(105deg, rgb(255 255 255 / 0.18), transparent 40%),
     var(--red);
-  box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 60px rgb(255 214 160 / 0.25);
+  box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18);
   text-decoration: none;
+  transform-origin: bottom center;
+  transition: transform 0.2s ease-out, box-shadow 0.2s;
 }
 .box-uno .box-logo {
   font: italic 900 calc(var(--shelf-h) * 0.17)/1 var(--card-font);
@@ -1072,7 +1075,14 @@ ul { padding: 0; list-style: none; }
 .box-uno .box-tag,
 .box-dice .box-tag { color: #fff; font-weight: 800; font-size: 1.05em; }
 .box-uno:hover,
-.box-dice:hover { box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 0 4px var(--paper), 0 0 60px rgb(255 214 160 / 0.3); }
+.box-dice:hover { box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 0 4px var(--paper); }
+/* The tapped box: lifted off the shelf toward the room, lit, and drawn over its neighbours. */
+.box-uno.selected,
+.box-dice.selected {
+  z-index: 1;
+  transform: scale(1.08);
+  box-shadow: inset -10px 0 0 rgb(0 0 0 / 0.18), 0 0 0 4px var(--paper), 0 0 calc(var(--shelf-h) * 0.07) rgb(255 214 160 / 0.4);
+}
 
 .box-dice { background: linear-gradient(105deg, rgb(255 255 255 / 0.16), transparent 40%), #8a3340; }
 .box-dice .box-logo {
@@ -1123,9 +1133,10 @@ ul { padding: 0; list-style: none; }
 }
 .shelf-aside h2 { font: 800 2em/1 var(--display); }
 .shelf-aside p { margin: 0.5em 0 1.2em; color: var(--haze); }
-.shelf-aside .btn + h2 { margin-top: 1.4em; }
-/* Two game boxes plus the spines leave no room for the aside on iPads and laptops; the boxes are buttons too. */
-@media (max-width: 1400px) { .shelf-aside { display: none; } }
+/* Two game boxes plus the spines leave no room for the aside on iPads and laptops, so it sits above the shelf. */
+@media (max-width: 1400px) {
+  .shelf-aside { position: absolute; right: clamp(12px, 2vw, 40px); bottom: 100%; padding-left: 0; }
+}
 
 /* ---------- Small screens and motion ---------- */
 

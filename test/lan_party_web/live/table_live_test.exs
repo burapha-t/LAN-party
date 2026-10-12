@@ -31,6 +31,7 @@ defmodule LanPartyWeb.TableLiveTest do
     phone |> form("#join", %{name: "Erin"}) |> render_submit()
 
     {:ok, table, _html} = live(build_conn(), ~p"/table")
+    table |> element(".box-uno") |> render_click()
     table |> element(".shelf-aside button", "Play UNO") |> render_click()
 
     assert Room.get_state().game_id == :uno
