@@ -9,6 +9,7 @@ defmodule LanPartyWeb.TableLive do
   alias LanParty.{Games, Room}
   alias LanParty.Uno.Card
   import LanPartyWeb.Uno.Components
+  alias LanPartyWeb.LiarsDice.Components, as: Dice
 
   @spines %{
     liars_dice: "--sc:#8a3340;--h:84%;--w:max(46px,5.2vw)",
@@ -77,13 +78,25 @@ defmodule LanPartyWeb.TableLive do
               </span>
               <span class="box-tag">2 to 8 players</span>
             </a>
+            <a class="box-dice" phx-click="pick_game" phx-value-id="liars_dice" aria-label="Liar's Dice, 2 to 8 players">
+              <span class="box-logo" aria-hidden="true">Liar's<br />Dice</span>
+              <span class="box-art" aria-hidden="true">
+                <Dice.face value={1} style="--x:-58%;--y:18%;--r:-14deg" />
+                <Dice.face value={5} style="--x:62%;--y:24%;--r:11deg" />
+                <Dice.face value={6} style="--x:0%;--y:-14%;--r:4deg" />
+              </span>
+              <span class="box-tag">2 to 8 players</span>
+            </a>
             <div :for={game <- @unbuilt} class="spine" style={@spines[game.id]}>
               <b>{game.name}</b><small>Not built yet</small>
             </div>
             <div class="shelf-aside">
               <h2>UNO</h2>
-              <p>The card game. Match the color or the number, and be the first to empty your hand.</p>
-              <button class="btn btn-big" phx-click="pick_game" phx-value-id="uno">Play UNO</button>
+              <p>The classic card game.</p>
+              <button class="btn" phx-click="pick_game" phx-value-id="uno">Play UNO</button>
+              <h2>Liar's Dice</h2>
+              <p>Bluff about hidden dice.</p>
+              <button class="btn" phx-click="pick_game" phx-value-id="liars_dice">Play Liar's Dice</button>
             </div>
           </div>
           <div class="plank"></div>
@@ -94,6 +107,13 @@ defmodule LanPartyWeb.TableLive do
         :if={@room.game_id == :uno}
         module={LanPartyWeb.Uno.TableComponent}
         id="uno-table"
+        room={@room}
+      />
+
+      <.live_component
+        :if={@room.game_id == :liars_dice}
+        module={LanPartyWeb.LiarsDice.TableComponent}
+        id="liars-dice-table"
         room={@room}
       />
     </main>

@@ -4,6 +4,8 @@ defmodule LanParty.Uno.Rules do
   The rules are in docs/uno/README.md; how they map to code is in docs/uno/design.md §6.
   """
 
+  @behaviour LanParty.Game
+
   alias LanParty.Uno.{Card, Deck}
 
   @hand_size 7
@@ -209,6 +211,13 @@ defmodule LanParty.Uno.Rules do
       {:error, :not_in_game}
     end
   end
+
+  @doc "A table control during a round. UNO has one: \"draw for player\", 1 to 10 cards."
+  def table_action(%__MODULE__{} = game, {:draw_for, token, n}) when is_integer(n) and n in 1..10,
+    do: draw_for(game, token, n)
+
+  def table_action(%__MODULE__{}, {:draw_for, _token, _n}), do: {:error, :bad_amount}
+  def table_action(%__MODULE__{}, _action), do: {:error, :unknown_action}
 
   defp pending_after_leave({:start_color, _token}, next), do: {:start_color, next}
   defp pending_after_leave(_pending, _next), do: nil

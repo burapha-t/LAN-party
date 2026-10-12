@@ -60,7 +60,7 @@ defmodule LanPartyWeb.Uno.TableComponent do
   end
 
   def handle_event("confirm_draw_for", _params, socket) do
-    result = Room.draw_for(socket.assigns.draw_for, socket.assigns.amount)
+    result = Room.table_act({:draw_for, socket.assigns.draw_for, socket.assigns.amount})
     reply(assign(socket, draw_for: nil), result)
   end
 

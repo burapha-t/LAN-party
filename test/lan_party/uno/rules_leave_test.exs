@@ -72,4 +72,18 @@ defmodule LanParty.Uno.RulesLeaveTest do
       assert game.draw_pile == []
     end
   end
+
+  describe "table_action/2" do
+    test "draw for player: 1 to 10 cards" do
+      {:ok, after_draw} = Rules.table_action(game(), {:draw_for, "c", 3})
+      assert length(after_draw.hands["c"]) == 5
+      assert Rules.table_action(game(), {:draw_for, "c", 0}) == {:error, :bad_amount}
+      assert Rules.table_action(game(), {:draw_for, "c", 11}) == {:error, :bad_amount}
+      assert Rules.table_action(game(), {:draw_for, "zed", 2}) == {:error, :not_in_game}
+    end
+
+    test "anything else is refused" do
+      assert Rules.table_action(game(), :roll) == {:error, :unknown_action}
+    end
+  end
 end
