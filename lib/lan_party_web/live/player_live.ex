@@ -104,6 +104,14 @@ defmodule LanPartyWeb.PlayerLive do
         token={@token}
       />
 
+      <.live_component
+        :if={@me && @room.game_id == :liars_dice}
+        module={LanPartyWeb.LiarsDice.PlayerComponent}
+        id="liars-dice-phone"
+        room={@room}
+        token={@token}
+      />
+
       <div
         id="reconnect"
         style="display: none"

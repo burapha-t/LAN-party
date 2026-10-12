@@ -86,7 +86,7 @@ defmodule LanPartyWeb.LobbyComponents do
     <div class="message">
       <h1>{"You're ##{@place} in line."}</h1>
       <p :if={@room.phase != :lobby} class="lead">A game is in progress. You'll play in the next one.</p>
-      <a :if={@room.phase != :lobby} class="wait">Waiting for this round to end</a>
+      <a :if={@room.phase != :lobby} class="wait">Waiting for this game to end</a>
       <p :if={@room.phase == :lobby} class="lead">The table is full. You'll play in the next one.</p>
       <a :if={@room.phase == :lobby} class="wait">Waiting for a free seat</a>
     </div>
