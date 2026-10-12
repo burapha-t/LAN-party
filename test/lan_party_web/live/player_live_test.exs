@@ -17,7 +17,7 @@ defmodule LanPartyWeb.PlayerLiveTest do
     {:ok, view, _html} = live(phone(conn, "erin"), ~p"/")
 
     assert has_element?(view, "form#join input[name=name]")
-    assert has_element?(view, ".brand", "LAN Party")
+    assert has_element?(view, ".wordmark", "LAN Party")
   end
 
   test "joining shows who is here while the table picks a game", %{conn: conn} do

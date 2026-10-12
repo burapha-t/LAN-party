@@ -2,24 +2,17 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
   @moduledoc """
   UNO on a phone: lobby, queue, the round, prompts, and the result. Rendered by `PlayerLive` once the
   table picks UNO. Never shows the pile or the current color (docs/uno/README.md "Views").
-  Markup follows docs/mockups/phone/.
+  Markup follows docs/mockups/redesign/uno/phone/.
   """
   use LanPartyWeb, :live_component
 
+  import LanPartyWeb.LobbyComponents
   import LanPartyWeb.Uno.Components
 
   alias LanParty.Room
   alias LanParty.Uno.{Card, View}
 
   @colors %{"red" => :red, "yellow" => :yellow, "green" => :green, "blue" => :blue}
-
-  @doc "Class for the phone's <main>: brighter when you must act; the winning color at the end."
-  def glow(%{phase: :playing, game: game}, token) do
-    if game.current == token and not match?({:start_color, _}, game.pending), do: "glow-turn"
-  end
-
-  def glow(%{phase: :finished, game: %{color: color}}, _token) when not is_nil(color), do: "glow-#{color}"
-  def glow(_room, _token), do: nil
 
   @impl true
   def update(%{id: id, room: room, token: token}, socket) do
@@ -104,7 +97,7 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
     case view.prompt do
       {:penalty, total, _can_challenge?} -> {:penalty, total, view.last_played_by && Room.name(room, view.last_played_by)}
       :choose_start_color -> :start_color
-      _other -> if view.my_turn?, do: :my_turn, else: {:turn, Room.name(room, view.current)}
+      _other -> if view.my_turn?, do: :my_turn, else: {:turn, view.current}
     end
   end
 
@@ -169,8 +162,6 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
 
   defp challenge_note(_view, _room, _token, _dismissed), do: nil
 
-  defp queue_number(room, token), do: Enum.find_index(Room.queued(room), &(&1 == token)) + 1
-
   defp cards(1), do: "1 card"
   defp cards(n), do: "#{n} cards"
 
@@ -189,30 +180,12 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
 
     ~H"""
     <div id={@id} style="display: contents">
-      <div :if={@screen == :lobby} class="message">
-        <h1>You're in.</h1>
-        <a class="wait">Waiting for the table to start</a>
-        <div>
-          <p class="people-label">Players</p>
-          <ul class="people">
-            <li :for={token <- Room.seated(@room)} class={token == @token && "you"}>
-              {Room.name(@room, token)}{if token == @token, do: " (you)"}
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div :if={@screen == :queue} class="message">
-        <h1>{"You're ##{queue_number(@room, @token)} in line."}</h1>
-        <p :if={@room.phase != :lobby} class="lead">A game is in progress. You'll play in the next one.</p>
-        <a :if={@room.phase != :lobby} class="wait">Waiting for this round to end</a>
-        <p :if={@room.phase == :lobby} class="lead">The table is full. You'll play in the next one.</p>
-        <a :if={@room.phase == :lobby} class="wait">Waiting for a free seat</a>
-      </div>
+      <.phone_lobby :if={@screen == :lobby} room={@room} token={@token} />
+      <.phone_queue :if={@screen == :queue} room={@room} token={@token} />
 
       <div :if={@screen == :finished} class="message centered">
         <.card card={LanParty.Uno.Rules.top_card(@room.game)} />
-        <h1 class="huge">{winner_line(@room, @token)}</h1>
+        <h1 class={["huge", @room.winner == @token && "win"]}>{winner_line(@room, @token)}</h1>
         <p :if={@room.winner != @token} class="lead">
           Last card: {Card.label(LanParty.Uno.Rules.top_card(@room.game))}
         </p>
@@ -230,8 +203,9 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
             <% :my_turn -> %>
               <p class="your-turn">Your turn</p>
               <p class="stage-hint">Match the top card on the table.</p>
-            <% {:turn, name} -> %>
-              <a class="turn">{name}'s turn</a>
+            <% {:turn, token} -> %>
+              <.avatar room={@room} token={token} />
+              <a class="turn">{Room.name(@room, token)}'s turn</a>
           <% end %>
         </div>
 
@@ -239,7 +213,7 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
         <.toast :if={@error} message={@error} phx-click="dismiss" phx-target={@myself} />
         <.toast :if={@note && !@error} message={@note} phx-click="dismiss" phx-target={@myself} />
 
-        <section aria-label="Your hand">
+        <section class="tray" aria-label="Your hand">
           <div class={["hand", length(@view.hand) == 1 && "one"]}>
             <.card_button
               :for={card <- @view.hand}
@@ -249,19 +223,18 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
               phx-target={@myself}
             />
           </div>
+          <div class="actions">
+            <%= case @view.prompt do %>
+              <% {:penalty, total, can_challenge?} -> %>
+                <button class="btn" phx-click="accept" phx-target={@myself}>Draw {total}</button>
+                <button :if={can_challenge?} class="btn btn-white" phx-click="challenge" phx-target={@myself}>
+                  Challenge
+                </button>
+              <% _other -> %>
+                <button class="btn btn-white" phx-click="draw" phx-target={@myself}>Draw</button>
+            <% end %>
+          </div>
         </section>
-
-        <div class="actions">
-          <%= case @view.prompt do %>
-            <% {:penalty, total, can_challenge?} -> %>
-              <button class="btn btn-primary" phx-click="accept" phx-target={@myself}>Draw {total}</button>
-              <button :if={can_challenge?} class="btn btn-secondary" phx-click="challenge" phx-target={@myself}>
-                Challenge
-              </button>
-            <% _other -> %>
-              <button class="btn btn-secondary" phx-click="draw" phx-target={@myself}>Draw</button>
-          <% end %>
-        </div>
 
         <%= case @current_sheet do %>
           <% {:color, title, sub} -> %>
@@ -280,7 +253,7 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
                   {String.capitalize(color)}
                 </a>
               </div>
-              <button class="btn btn-secondary" phx-click="cancel" phx-target={@myself}>Cancel</button>
+              <button class="btn btn-quiet" phx-click="cancel" phx-target={@myself}>Cancel</button>
             </section>
           <% :swap -> %>
             <div class="scrim"></div>
@@ -289,10 +262,10 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
               <p class="sub">You played a 7. They get your hand, you get theirs.</p>
               <div class="pick-list">
                 <a :for={token <- @view.others} phx-click="pick_player" phx-value-token={token} phx-target={@myself}>
-                  {Room.name(@room, token)}<span>{cards(@view.counts[token])}</span>
+                  <.avatar room={@room} token={token} /><b>{Room.name(@room, token)}</b><span>{cards(@view.counts[token])}</span>
                 </a>
               </div>
-              <button class="btn btn-secondary" phx-click="cancel" phx-target={@myself}>Cancel</button>
+              <button class="btn btn-quiet" phx-click="cancel" phx-target={@myself}>Cancel</button>
             </section>
           <% :start_color -> %>
             <div class="scrim"></div>
@@ -317,10 +290,10 @@ defmodule LanPartyWeb.Uno.PlayerComponent do
               <h2 id="sheet-title">You drew a {Card.label(card)}</h2>
               <div class="drawn"><.card card={card} /></div>
               <div class="actions">
-                <button class="btn btn-primary" phx-click="play" phx-value-id={card.id} phx-target={@myself}>
+                <button class="btn" phx-click="play" phx-value-id={card.id} phx-target={@myself}>
                   Play it
                 </button>
-                <button class="btn btn-secondary" phx-click="keep" phx-target={@myself}>Keep it</button>
+                <button class="btn btn-white" phx-click="keep" phx-target={@myself}>Keep it</button>
               </div>
             </section>
           <% nil -> %>

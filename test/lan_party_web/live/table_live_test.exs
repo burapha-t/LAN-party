@@ -35,7 +35,7 @@ defmodule LanPartyWeb.TableLiveTest do
 
     assert Room.get_state().game_id == :uno
     sync(phone)
-    assert has_element?(phone, ".brand", "UNO")
+    assert has_element?(phone, ".wordmark", "UNO")
   end
 
   test "a game that isn't built can't be picked", %{conn: conn} do

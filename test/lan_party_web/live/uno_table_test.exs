@@ -25,9 +25,10 @@ defmodule LanPartyWeb.UnoTableTest do
   end
 
   test "the lobby waits for a second player", %{table: table} do
-    assert has_element?(table, ".game-name", "UNO")
-    assert has_element?(table, ".people li", "Erin")
-    assert has_element?(table, ".lobby-note .wait", "Waiting for players to join")
+    assert has_element?(table, ".wordmark", "UNO")
+    assert has_element?(table, ".roster li", "Erin")
+    assert has_element?(table, ".roster li .avatar.p1", "E")
+    assert has_element?(table, ".panel .wait", "Waiting for players to join")
     assert has_element?(table, "button[disabled]", "Start game")
     assert has_element?(table, ".start-row p", "Start needs at least 2 players.")
   end
@@ -36,7 +37,7 @@ defmodule LanPartyWeb.UnoTableTest do
     :ok = Room.join("bob", "Bob", page())
     sync(table)
 
-    assert has_element?(table, ".lobby-note", "2 of 8 seats taken.")
+    assert has_element?(table, ".seats-left", "2 of 8 seats taken")
     refute has_element?(table, "button[disabled]", "Start game")
   end
 
@@ -62,7 +63,7 @@ defmodule LanPartyWeb.UnoTableTest do
     assert has_element?(table, ".table-info .turn", "Erin's turn")
     assert has_element?(table, ".facts", "Color: red")
     assert has_element?(table, ".top-card .card.red")
-    assert has_element?(table, "main.glow-red")
+    assert has_element?(table, ".felt.felt-red")
     refute has_element?(table, "button", "Change game")
   end
 

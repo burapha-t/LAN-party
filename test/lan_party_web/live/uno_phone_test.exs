@@ -46,7 +46,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
   end
 
   test "the lobby lists the players", %{erin: erin} do
-    assert has_element?(erin, ".brand", "UNO")
+    assert has_element?(erin, ".wordmark", "UNO")
     assert has_element?(erin, ".wait", "Waiting for the table to start")
     assert has_element?(erin, ".people li.you", "Erin (you)")
     assert has_element?(erin, ".people li", "Bob")
@@ -62,7 +62,6 @@ defmodule LanPartyWeb.UnoPhoneTest do
     refute render(erin) =~ "Color:"
     assert has_element?(erin, ".your-turn", "Your turn")
     assert has_element?(erin, ".stage-hint", "Match the top card on the table.")
-    assert has_element?(erin, "main.glow-turn")
   end
 
   test "tapping a card plays it", %{erin: erin} do
@@ -72,7 +71,7 @@ defmodule LanPartyWeb.UnoPhoneTest do
 
     assert Rules.top_card(Room.get_state().game).id == 2
     assert has_element?(erin, ".turn", "Bob's turn")
-    refute has_element?(erin, "main.glow-turn")
+    refute has_element?(erin, ".your-turn")
   end
 
   test "a card out of turn gets Not your turn; OK hides it", %{erin: erin} do
